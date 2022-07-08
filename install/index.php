@@ -5,7 +5,7 @@ use Bitrix\Main\ModuleManager;
 
 Loc::loadMessages(__FILE__);
 
-class crocodile extends CModule
+class hack_crocodile extends CModule
 {
 	public $MODULE_ID = 'hack.crocodile';
 	public $MODULE_VERSION;

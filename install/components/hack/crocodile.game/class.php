@@ -12,7 +12,7 @@ Loader::includeModule('hack.crocodile');
 
 // Loc::loadMessages(__DIR__ . '/template.php');
 
-class CrocodileGame extends CBitrixComponent
+class HackCrocodileGame extends CBitrixComponent
 {
 	protected function prepareResult(): array
 	{
