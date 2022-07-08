@@ -1,0 +1,6 @@
+<?php
+
+$MESS['CROCODILE_MODULE_INSTALL_NAME'] = 'Крокодил';
+$MESS['CROCODILE_MODULE_INSTALL_DESCRIPTION'] = 'Игра по рисованию';
+$MESS['CROCODILE_MODULE_INSTALL_TITLE'] = 'Установка модуля';
+$MESS['CROCODILE_MODULE_UNINSTALL_TITLE'] = 'Удаление модуля';

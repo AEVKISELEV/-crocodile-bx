@@ -8,11 +8,11 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 
-Loader::includeModule('crocodile');
+Loader::includeModule('hack.crocodile');
 
 // Loc::loadMessages(__DIR__ . '/template.php');
 
-class UpTeremokTest extends CBitrixComponent
+class CrocodileGame extends CBitrixComponent
 {
 	protected function prepareResult(): array
 	{
