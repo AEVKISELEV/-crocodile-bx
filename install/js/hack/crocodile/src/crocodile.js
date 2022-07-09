@@ -1,4 +1,4 @@
-import {Type, Dom, Loc, Event} from 'main.core';
+import {Type, Dom, Loc} from 'main.core';
 import { BaseEvent, EventEmitter } from 'main.core.events';
 import { BitrixVue } from 'ui.vue3';
 import './crocodile.css';
@@ -42,9 +42,15 @@ export class CrocodileApplication
 			},
 			mounted()
 			{
-				EventEmitter.subscribe('Hack.Crocodile:pictureUpdated', this.updateImage);
+				BX.PULL.subscribe({
+					type: BX.PullClient.SubscriptionType.Server,
+					moduleId: 'hack.crocodile',
+					callback: function (data) {
+						console.log(data)
+					}.bind(this)
+				});
+				// EventEmitter.subscribe('Hack.Crocodile:pictureUpdated', this.updateImage);
 				BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom').then(response => {
-					console.log(response.data)
 					this.artistName = response.data.artistName;
 					this.roomId = response.data.roomId;
 					this.userId = response.data.userId;
@@ -94,10 +100,9 @@ export class CrocodileApplication
 							let formData = new FormData();
 							formData.append('crocodile.png', file);
 							fetch('/uploadImage', {method: "POST", body: formData})
-								.then((response) => {
-									Event.EventEmitter.emit('Hack.Crocodile:pictureUpdated');
+								.then(() => {
+									BX.ajax.runAction('hack:crocodile.CrocodileController.pushImage');
 								})
-
 						}, 'image/png');
 					};
 
@@ -126,8 +131,8 @@ export class CrocodileApplication
 					this.ctx.strokeStyle = "#ffffff";
 					this.ctx.lineWidth = 16;
 				},
-				updateImage() {
-					console.log('12345')
+				updateImage(e) {
+					console.log(e.data)
 				}
 			},
 			components: {

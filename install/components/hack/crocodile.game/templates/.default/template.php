@@ -8,6 +8,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 }
 
 \Bitrix\Main\UI\Extension::load('hack.crocodile');
+\Bitrix\Main\UI\Extension::load('pull.client');
 
 ?>
 

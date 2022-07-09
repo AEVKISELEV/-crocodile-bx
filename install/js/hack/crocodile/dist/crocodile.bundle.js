@@ -41,9 +41,15 @@ this.BX.Hack = this.BX.Hack || {};
 	        mounted: function mounted() {
 	          var _this = this;
 
-	          main_core_events.EventEmitter.subscribe('Hack.Crocodile:pictureUpdated', this.updateImage);
+	          BX.PULL.subscribe({
+	            type: BX.PullClient.SubscriptionType.Server,
+	            moduleId: 'hack.crocodile',
+	            callback: function (data) {
+	              console.log(data);
+	            }.bind(this)
+	          }); // EventEmitter.subscribe('Hack.Crocodile:pictureUpdated', this.updateImage);
+
 	          BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom').then(function (response) {
-	            console.log(response.data);
 	            _this.artistName = response.data.artistName;
 	            _this.roomId = response.data.roomId;
 	            _this.userId = response.data.userId;
@@ -100,8 +106,8 @@ this.BX.Hack = this.BX.Hack || {};
 	                fetch('/uploadImage', {
 	                  method: "POST",
 	                  body: formData
-	                }).then(function (response) {
-	                  main_core.Event.EventEmitter.emit('Hack.Crocodile:pictureUpdated');
+	                }).then(function () {
+	                  BX.ajax.runAction('hack:crocodile.CrocodileController.pushImage');
 	                });
 	              }, 'image/png');
 	            };
@@ -130,8 +136,8 @@ this.BX.Hack = this.BX.Hack || {};
 	            this.ctx.strokeStyle = "#ffffff";
 	            this.ctx.lineWidth = 16;
 	          },
-	          updateImage: function updateImage() {
-	            console.log('12345');
+	          updateImage: function updateImage(e) {
+	            console.log(e.data);
 	          }
 	        },
 	        components: {//Chat

@@ -73,6 +73,17 @@ class CrocodileController extends Main\Engine\Controller
 		return $arrayMessages;
 	}
 
+	public function pushImageAction()
+	{
+		\Bitrix\Pull\Event::add(3, [
+			'module_id' => 'hack.crocodile',
+			'command' => 'updateImage',
+			'params' => [
+				'updated' => true
+			],
+		]);
+	}
+
 	public function uploadMessageAction($roomId, $userId, $message)
 	{
 		$parametrs = [
