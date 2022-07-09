@@ -91,9 +91,14 @@ export class CrocodileApplication
 							let file = new File([blob], "crocodile.png", { type: "image/png" });
 							let formData = new FormData();
 							formData.append('crocodile.png', file);
-							BX.ajax.post('/uploadImage', formData, (data) => {
-								console.log(data)
-							})
+							fetch('/uploadImage', {method: "POST", body: formData})
+								.then((response) => {
+									return response.json();
+								})
+								.then((data) => {
+									console.log(data)
+								});
+
 						}, 'image/png');
 					};
 

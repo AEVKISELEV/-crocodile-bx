@@ -8,10 +8,9 @@ use Bitrix\Main\Routing\RoutingConfigurator;
 return function (RoutingConfigurator $routes) {
 
 	$routes->post('/uploadImage', function () {
-		Loader::includeModule('hack.crocodile');
-		$imageController = new ImageController();
-		// echo $imageController->updateImage($_FILES[0]);
-		echo json_encode($_FILES);
+		$tmp_name = array_values($_FILES)[0]['tmp_name'];
+		move_uploaded_file($tmp_name, $_SERVER['DOCUMENT_ROOT'] . "/assets/crocodile.png");
+		echo 123;
 	});
 
 };

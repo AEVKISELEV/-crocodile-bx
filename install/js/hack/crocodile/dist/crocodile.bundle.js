@@ -96,7 +96,12 @@ this.BX.Hack = this.BX.Hack || {};
 	                });
 	                var formData = new FormData();
 	                formData.append('crocodile.png', file);
-	                BX.ajax.post('/uploadImage', formData, function (data) {
+	                fetch('/uploadImage', {
+	                  method: "POST",
+	                  body: formData
+	                }).then(function (response) {
+	                  return response.json();
+	                }).then(function (data) {
 	                  console.log(data);
 	                });
 	              }, 'image/png');
