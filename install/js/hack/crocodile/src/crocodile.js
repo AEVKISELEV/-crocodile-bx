@@ -171,7 +171,14 @@ export class CrocodileApplication
 							{
 								width: 300,
 								height: 200,
-								content: Tag.render`<div>${event.params.winnerName}</div>`
+								content: Tag.render`<div>${event.params.winnerName}</div>`,
+								closeIcon: true,
+								events: {
+									onClose()
+									{
+										document.location.reload();
+									}
+								}
 							}
 						);
 						popup.show();

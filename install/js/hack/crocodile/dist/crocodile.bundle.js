@@ -176,7 +176,13 @@ this.BX.Hack = this.BX.Hack || {};
 	              var popup = new main_popup.Popup({
 	                width: 300,
 	                height: 200,
-	                content: main_core.Tag.render(_templateObject || (_templateObject = babelHelpers.taggedTemplateLiteral(["<div>", "</div>"])), event.params.winnerName)
+	                content: main_core.Tag.render(_templateObject || (_templateObject = babelHelpers.taggedTemplateLiteral(["<div>", "</div>"])), event.params.winnerName),
+	                closeIcon: true,
+	                events: {
+	                  onClose: function onClose() {
+	                    document.location.reload();
+	                  }
+	                }
 	              });
 	              popup.show();
 	            }
