@@ -31,13 +31,14 @@ class CrocodileController extends Main\Engine\Controller
 
 		if((int)$room['ARTIST_ID'] === 0)
 		{
-			$this->updateRoom($room['ID'], $userID, $this->words[array_rand($this->words)]);
+			$randomWords = $this->words[array_rand($this->words)];
+			$this->updateRoom($room['ID'], $userID, $randomWords);
 			return [
 				'roomId' => $room['ID'],
 				'artistName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
 				'userName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
 				'isArtist' => true,
-				'word' => $room['WORD'],
+				'word' => $randomWords,
 				'userID' => $userID,
 			];
 		}
