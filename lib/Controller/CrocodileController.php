@@ -1,5 +1,7 @@
 <?php
 
+namespace Hack\Crocodile\Controller;
+
 use Bitrix\Main;
 use Up\Bitflix\Model\RoomTable;
 
