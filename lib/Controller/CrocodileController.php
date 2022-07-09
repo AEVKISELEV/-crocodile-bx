@@ -116,6 +116,20 @@ class CrocodileController extends Main\Engine\Controller
 				],
 			]
 		);
+		if ($message === $this->getWordByRoomId($roomId))
+		{
+			$randomWord = $this->words[array_rand($this->words)];
+			$this->updateRoom($roomId, $userId, $randomWord);
+			CPullWatch::AddToStack(
+				'crocodile', [
+					'module_id' => 'hack.crocodile',
+					'command' => 'gameFinish',
+					'params' => [
+						'winnerName' => $userName,
+					],
+				]
+			);
+		}
 	}
 
 	private function getRoom()
@@ -126,6 +140,18 @@ class CrocodileController extends Main\Engine\Controller
 		];
 
 		return RoomTable::getList($parameters)->fetch();
+	}
+
+	private function getWordByRoomId(int $id)
+	{
+		$parameters = [
+			'select' => ['*'],
+			'filter' => ['=ID' => $id]
+		];
+
+		$room = RoomTable::getList($parameters)->fetch();
+
+		return $room['WORD'];
 	}
 
 	private function updateRoom($id, $artist_id, $word): void
