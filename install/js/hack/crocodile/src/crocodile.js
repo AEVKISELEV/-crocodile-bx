@@ -1,4 +1,5 @@
-import {Type, Dom, Loc} from 'main.core';
+import {Type, Dom, Loc, Event} from 'main.core';
+import { BaseEvent, EventEmitter } from 'main.core.events';
 import { BitrixVue } from 'ui.vue3';
 import './crocodile.css';
 
@@ -41,6 +42,7 @@ export class CrocodileApplication
 			},
 			mounted()
 			{
+				EventEmitter.subscribe('Hack.Crocodile:pictureUpdated', this.updateImage);
 				BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom').then(response => {
 					console.log(response.data)
 					this.artistName = response.data.artistName;
@@ -93,11 +95,8 @@ export class CrocodileApplication
 							formData.append('crocodile.png', file);
 							fetch('/uploadImage', {method: "POST", body: formData})
 								.then((response) => {
-									return response.json();
+									Event.EventEmitter.emit('Hack.Crocodile:pictureUpdated');
 								})
-								.then((data) => {
-									console.log(data)
-								});
 
 						}, 'image/png');
 					};
@@ -127,6 +126,9 @@ export class CrocodileApplication
 					this.ctx.strokeStyle = "#ffffff";
 					this.ctx.lineWidth = 16;
 				},
+				updateImage() {
+					console.log('12345')
+				}
 			},
 			components: {
 				//Chat

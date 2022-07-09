@@ -1,6 +1,6 @@
 this.BX = this.BX || {};
 this.BX.Hack = this.BX.Hack || {};
-(function (exports,main_core,ui_vue3) {
+(function (exports,main_core,main_core_events,ui_vue3) {
 	'use strict';
 
 	var CrocodileApplication = /*#__PURE__*/function () {
@@ -41,6 +41,7 @@ this.BX.Hack = this.BX.Hack || {};
 	        mounted: function mounted() {
 	          var _this = this;
 
+	          main_core_events.EventEmitter.subscribe('Hack.Crocodile:pictureUpdated', this.updateImage);
 	          BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom').then(function (response) {
 	            console.log(response.data);
 	            _this.artistName = response.data.artistName;
@@ -100,9 +101,7 @@ this.BX.Hack = this.BX.Hack || {};
 	                  method: "POST",
 	                  body: formData
 	                }).then(function (response) {
-	                  return response.json();
-	                }).then(function (data) {
-	                  console.log(data);
+	                  main_core.Event.EventEmitter.emit('Hack.Crocodile:pictureUpdated');
 	                });
 	              }, 'image/png');
 	            };
@@ -130,6 +129,9 @@ this.BX.Hack = this.BX.Hack || {};
 	            this.tool = 'erase';
 	            this.ctx.strokeStyle = "#ffffff";
 	            this.ctx.lineWidth = 16;
+	          },
+	          updateImage: function updateImage() {
+	            console.log('12345');
 	          }
 	        },
 	        components: {//Chat
@@ -143,5 +145,5 @@ this.BX.Hack = this.BX.Hack || {};
 
 	exports.CrocodileApplication = CrocodileApplication;
 
-}((this.BX.Hack.Crocodile = this.BX.Hack.Crocodile || {}),BX,BX.Vue3));
+}((this.BX.Hack.Crocodile = this.BX.Hack.Crocodile || {}),BX,BX.Event,BX.Vue3));
 //# sourceMappingURL=crocodile.bundle.js.map
