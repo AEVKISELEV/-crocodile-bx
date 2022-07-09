@@ -93,64 +93,67 @@ this.BX.Hack = this.BX.Hack || {};
 	              _this.chat = r.data.chat;
 	              _this.$refs.crocodileChat.scrollTop = _this.$refs.crocodileChat.scrollHeight;
 	            });
-	          });
-	          this.ctx = this.$refs.crocodileCanvas.getContext("2d");
-	          this.ctx.fillStyle = "#ffffff";
-	          this.ctx.rect(0, 0, this.$refs.crocodileCanvas.width, this.$refs.crocodileCanvas.height);
-	          this.ctx.fill();
-	          this.ctx.strokeStyle = "#000000";
-	          this.ctx.lineCap = "round";
-	          this.ctx.lineWidth = 4;
+	            _this.ctx = _this.$refs.crocodileCanvas.getContext("2d");
+	            _this.ctx.fillStyle = "#ffffff";
 
-	          this.$refs.crocodileCanvas.onmousemove = function (e) {
-	            if (_this.isArtist) {
-	              var x = e.offsetX;
-	              var y = e.offsetY;
-	              var dx = e.movementX;
-	              var dy = e.movementY;
+	            _this.ctx.rect(0, 0, _this.$refs.crocodileCanvas.width, _this.$refs.crocodileCanvas.height);
 
-	              if (e.buttons > 0) {
-	                _this.ctx.beginPath();
+	            _this.ctx.fill();
 
-	                _this.ctx.moveTo(x, y);
+	            _this.ctx.strokeStyle = "#000000";
+	            _this.ctx.lineCap = "round";
+	            _this.ctx.lineWidth = 4;
 
-	                _this.ctx.lineTo(x - dx, y - dy);
+	            _this.$refs.crocodileCanvas.onmousemove = function (e) {
+	              if (_this.isArtist) {
+	                var x = e.offsetX;
+	                var y = e.offsetY;
+	                var dx = e.movementX;
+	                var dy = e.movementY;
 
-	                _this.ctx.stroke();
+	                if (e.buttons > 0) {
+	                  _this.ctx.beginPath();
 
-	                _this.ctx.closePath();
+	                  _this.ctx.moveTo(x, y);
+
+	                  _this.ctx.lineTo(x - dx, y - dy);
+
+	                  _this.ctx.stroke();
+
+	                  _this.ctx.closePath();
+	                }
 	              }
-	            }
-	          };
+	            };
 
-	          this.$refs.crocodileCanvas.onmouseup = function () {
-	            _this.$refs.crocodileCanvas.toBlob(function (blob) {
-	              var file = new File([blob], "crocodile.png", {
-	                type: "image/png"
-	              });
-	              var formData = new FormData();
-	              formData.append('crocodile.png', file);
-	              fetch('/uploadImage', {
-	                method: "POST",
-	                body: formData
-	              }).then(function (response) {
-	                return response.json();
-	              }).then(function (data) {
-	                console.log(data);
-	              });
-	            }, 'image/png');
-	          };
+	            _this.$refs.crocodileCanvas.onmouseup = function () {
+	              _this.$refs.crocodileCanvas.toBlob(function (blob) {
+	                var file = new File([blob], "crocodile.png", {
+	                  type: "image/png"
+	                });
+	                var formData = new FormData();
+	                formData.append('crocodile.png', file);
+	                fetch('/uploadImage', {
+	                  method: "POST",
+	                  body: formData
+	                }).then(function (response) {
+	                  return response.json();
+	                }).then(function (data) {
+	                  console.log(data);
+	                });
+	              }, 'image/png');
+	            };
 
-	          this.$refs.chatForm.addEventListener('submit', function (e) {
-	            e.preventDefault();
-	            BX.ajax.runAction('hack:crocodile.CrocodileController.uploadMessage', {
-	              data: {
-	                roomId: _this.roomId,
-	                userId: _this.userId,
-	                message: _this.message
-	              }
+	            _this.$refs.chatForm.addEventListener('submit', function (e) {
+	              e.preventDefault();
+	              BX.ajax.runAction('hack:crocodile.CrocodileController.uploadMessage', {
+	                data: {
+	                  roomId: _this.roomId,
+	                  userId: _this.userId,
+	                  message: _this.message
+	                }
+	              });
+	              _this.message = '';
 	            });
-	            _this.message = '';
 	          });
 	        },
 	        methods: {
