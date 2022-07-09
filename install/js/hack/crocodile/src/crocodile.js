@@ -28,7 +28,7 @@ export class CrocodileApplication
 				return {
 					chat:
 						[
-							{name: 'Петр Попов', message: 'рекурсия'},
+							{name: 'Petr Popov', message: 'рекурсия'},
 							{name: 'Артём Киселёв', message: 'массажное кресло'}
 						],
 					tool: 'brush',
