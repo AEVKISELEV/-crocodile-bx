@@ -24,7 +24,8 @@ class RoomTable extends DataManager
 				'ID',
 				[
 					'primary' => true,
-					'required' => true
+					'required' => true,
+					'autocomplete' => true,
 				]
 			),
 			new IntegerField(

@@ -24,6 +24,7 @@ class MessageTable extends DataManager
 				'ID',
 				[
 					'primary' => true,
+					'autocomplete' => true,
 					'required' => true
 				]
 			),
