@@ -120,6 +120,7 @@ class CrocodileController extends Main\Engine\Controller
 		{
 			$randomWord = $this->words[array_rand($this->words)];
 			$this->updateRoom($roomId, $userId, $randomWord);
+			$this->cleanMessenger($roomId);
 			CPullWatch::AddToStack(
 				'crocodile', [
 					'module_id' => 'hack.crocodile',
@@ -130,6 +131,12 @@ class CrocodileController extends Main\Engine\Controller
 				]
 			);
 		}
+	}
+
+	private function cleanMessenger($roomId)
+	{
+		global $DB;
+		$DB->Query("DELETE FROM hack_message WHERE ROOM_ID = $roomId");
 	}
 
 	private function getRoom()
@@ -166,5 +173,7 @@ class CrocodileController extends Main\Engine\Controller
 		];
 		RoomTable::update($id, $parameters);
 	}
+
+
 
 }
