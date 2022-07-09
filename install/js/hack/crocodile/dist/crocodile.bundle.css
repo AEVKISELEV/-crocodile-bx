@@ -4,13 +4,17 @@
 	display: flex;
 }
 
+.selected-tool {
+	margin: 10px 0 10px;
+}
+
 canvas {
 	border: 1px solid #000;
 	-webkit-user-select: none;
 	   -moz-user-select: none;
 	    -ms-user-select: none;
 	        user-select: none;
-	margin: 10px;
+	margin-right: 20px;
 }
 
 .crocodile-chat {
@@ -18,7 +22,6 @@ canvas {
 	-webkit-box-flex: 1;
 	    -ms-flex: 1;
 	        flex: 1;
-	margin: 10px;
 }
 
 .message {
