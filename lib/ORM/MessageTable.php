@@ -25,7 +25,6 @@ class MessageTable extends DataManager
 				[
 					'primary' => true,
 					'autocomplete' => true,
-					'required' => true
 				]
 			),
 			new IntegerField(
