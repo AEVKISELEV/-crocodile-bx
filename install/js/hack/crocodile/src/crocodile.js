@@ -26,7 +26,11 @@ export class CrocodileApplication
 		BitrixVue.createApp({
 			data() {
 				return {
-					//param: value
+					chat:
+						[
+							{name: 'Петр Попов', message: 'рекурсия'},
+							{name: 'Артём Киселёв', message: 'массажное кресло'}
+						],
 				}
 			},
 			mounted()
@@ -56,7 +60,15 @@ export class CrocodileApplication
 				//Chat
 			},
 			template: `
-				<canvas ref="crocodileCanvas" width="600" height="400"></canvas>
+				<div class="crocodile-container">
+					<canvas ref="crocodileCanvas" width="600" height="400"></canvas>
+					<div ref="crocodileChat" class="crocodile-chat">
+						<div class="message" v-for="msg of chat">
+							<div class="message-author">{{msg.name}}</div>
+							<div class="message-text">{{msg.message}}</div>
+						</div>
+					</div>
+				</div>
 			`
 		}).mount(this.rootNode);
 	}

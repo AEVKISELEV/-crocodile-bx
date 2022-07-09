@@ -25,7 +25,14 @@ this.BX.Hack = this.BX.Hack || {};
 	    value: function attachTemplate() {
 	      ui_vue3.BitrixVue.createApp({
 	        data: function data() {
-	          return {//param: value
+	          return {
+	            chat: [{
+	              name: 'Петр Попов',
+	              message: 'рекурсия'
+	            }, {
+	              name: 'Артём Киселёв',
+	              message: 'массажное кресло'
+	            }]
 	          };
 	        },
 	        mounted: function mounted() {
@@ -52,7 +59,7 @@ this.BX.Hack = this.BX.Hack || {};
 	        },
 	        components: {//Chat
 	        },
-	        template: "\n\t\t\t\t<canvas ref=\"crocodileCanvas\" width=\"600\" height=\"400\"></canvas>\n\t\t\t"
+	        template: "\n\t\t\t\t<div class=\"crocodile-container\">\n\t\t\t\t\t<canvas ref=\"crocodileCanvas\" width=\"600\" height=\"400\"></canvas>\n\t\t\t\t\t<div ref=\"crocodileChat\" class=\"crocodile-chat\">\n\t\t\t\t\t\t<div class=\"message\" v-for=\"msg of chat\">\n\t\t\t\t\t\t\t<div class=\"message-author\">{{msg.name}}</div>\n\t\t\t\t\t\t\t<div class=\"message-text\">{{msg.message}}</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t"
 	      }).mount(this.rootNode);
 	    }
 	  }]);
