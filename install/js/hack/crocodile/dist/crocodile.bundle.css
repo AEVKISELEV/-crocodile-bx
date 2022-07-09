@@ -1,0 +1,32 @@
+.crocodile-container {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+}
+
+canvas {
+	border: 1px solid #000;
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	    -ms-user-select: none;
+	        user-select: none;
+	margin: 10px;
+}
+
+.crocodile-chat {
+	border: 1px solid #000;
+	-webkit-box-flex: 1;
+	    -ms-flex: 1;
+	        flex: 1;
+	margin: 10px;
+}
+
+.message {
+	border: 1px solid #000;
+	margin: 5px;
+	padding: 5px;
+}
+
+.message-author {
+	font-weight: bold;
+}
