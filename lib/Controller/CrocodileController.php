@@ -3,6 +3,7 @@
 namespace Hack\Crocodile\Controller;
 
 use Bitrix\Main;
+use Hack\Crocodile\ORM\MessageTable;
 use Hack\Crocodile\ORM\RoomTable;
 
 class CrocodileController extends Main\Engine\Controller
@@ -70,6 +71,16 @@ class CrocodileController extends Main\Engine\Controller
 			];
 		}
 		return $arrayMessages;
+	}
+
+	public function uploadMessageAction($roomId, $userId, $message)
+	{
+		$parametrs = [
+			'ROOM_ID' => $roomId,
+			'USER_ID' => $userId,
+			'MESSAGE' => $message
+		];
+		MessageTable::add($parametrs);
 	}
 
 	private function getRoom()
