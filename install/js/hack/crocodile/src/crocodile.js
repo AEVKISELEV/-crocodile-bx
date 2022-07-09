@@ -28,7 +28,7 @@ export class CrocodileApplication
 				return {
 					chat:
 						[
-							{name: 'Petr Popov', message: 'рекурсия'},
+							{name: 'Петр Попов', message: 'рекурсия'},
 							{name: 'Артём Киселёв', message: 'массажное кресло'}
 						],
 					tool: 'brush',
@@ -39,6 +39,11 @@ export class CrocodileApplication
 			{
 				const canvas = this.$refs.crocodileCanvas;
 				this.ctx = canvas.getContext("2d");
+
+				this.ctx.fillStyle = "#ffffff";
+				this.ctx.rect(0, 0, canvas.width, canvas.height);
+				this.ctx.fill();
+
 				this.ctx.strokeStyle = "#000000";
 				this.ctx.lineCap = "round";
 				this.ctx.lineWidth = 4;

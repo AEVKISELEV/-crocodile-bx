@@ -27,7 +27,7 @@ this.BX.Hack = this.BX.Hack || {};
 	        data: function data() {
 	          return {
 	            chat: [{
-	              name: 'Petr Popov',
+	              name: 'Петр Попов',
 	              message: 'рекурсия'
 	            }, {
 	              name: 'Артём Киселёв',
@@ -42,6 +42,9 @@ this.BX.Hack = this.BX.Hack || {};
 
 	          var canvas = this.$refs.crocodileCanvas;
 	          this.ctx = canvas.getContext("2d");
+	          this.ctx.fillStyle = "#ffffff";
+	          this.ctx.rect(0, 0, canvas.width, canvas.height);
+	          this.ctx.fill();
 	          this.ctx.strokeStyle = "#000000";
 	          this.ctx.lineCap = "round";
 	          this.ctx.lineWidth = 4;
