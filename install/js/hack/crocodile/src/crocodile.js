@@ -31,6 +31,12 @@ export class CrocodileApplication
 							{name: 'Петр Попов', message: 'рекурсия'},
 							{name: 'Артём Киселёв', message: 'массажное кресло'}
 						],
+					artistName: 'Художник',
+					roomId: null,
+					isArtist: true,
+					word: 'рекурсия',
+					imagePath: null,
+
 					tool: 'brush',
 					ctx: null
 				}
@@ -43,6 +49,15 @@ export class CrocodileApplication
 					this.isArtist = response.data.isArtist;
 					this.word = response.data.word;
 					this.imagePath = response.data.imagePath;
+
+					BX.ajax.runAction('hack:crocodile.CrocodileController.getChat',{
+						data: {
+							roomId: this.roomId
+						}
+					}).then(r => {
+						this.chat = r.data.chat;
+					});
+
 				});
 
 				const canvas = this.$refs.crocodileCanvas;
@@ -87,19 +102,25 @@ export class CrocodileApplication
 				//Chat
 			},
 			template: `
-				<div class="artist-panel">
-					<button @click="selectBrush">Brush</button>
-					<button @click="selectErase">Erase</button>
-				</div>
-				<div class="selected-tool">
-					Tool: {{tool}}
-				</div>
 				<div class="crocodile-container">
-					<canvas ref="crocodileCanvas" width="600" height="400"></canvas>
-					<div ref="crocodileChat" class="crocodile-chat">
-						<div class="message" v-for="msg of chat">
-							<div class="message-author">{{msg.name}}</div>
-							<div class="message-text">{{msg.message}}</div>
+					<div class="artist-panel" v-if="isArtist">
+						<button @click="selectBrush">Brush</button>
+						<button @click="selectErase">Erase</button>
+						<div class="selected-tool">
+							Tool: {{tool}}
+						</div>
+					</div>
+					<div class="room-info">
+						<div class="room-artist">{{artistName}}</div>
+						<div class="room-word">{{word}}</div>
+					</div>
+					<div class="crocodile-game">
+						<canvas ref="crocodileCanvas" width="600" height="400"></canvas>
+						<div ref="crocodileChat" class="crocodile-chat">
+							<div class="message" v-for="msg of chat">
+								<div class="message-author">{{msg.name}}</div>
+								<div class="message-text">{{msg.message}}</div>
+							</div>
 						</div>
 					</div>
 				</div>

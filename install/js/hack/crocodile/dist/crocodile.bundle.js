@@ -33,6 +33,11 @@ this.BX.Hack = this.BX.Hack || {};
 	              name: 'Артём Киселёв',
 	              message: 'массажное кресло'
 	            }],
+	            artistName: 'Художник',
+	            roomId: null,
+	            isArtist: true,
+	            word: 'рекурсия',
+	            imagePath: null,
 	            tool: 'brush',
 	            ctx: null
 	          };
@@ -46,6 +51,13 @@ this.BX.Hack = this.BX.Hack || {};
 	            _this.isArtist = response.data.isArtist;
 	            _this.word = response.data.word;
 	            _this.imagePath = response.data.imagePath;
+	            BX.ajax.runAction('hack:crocodile.CrocodileController.getChat', {
+	              data: {
+	                roomId: _this.roomId
+	              }
+	            }).then(function (r) {
+	              _this.chat = r.data.chat;
+	            });
 	          });
 	          var canvas = this.$refs.crocodileCanvas;
 	          this.ctx = canvas.getContext("2d");
@@ -89,7 +101,7 @@ this.BX.Hack = this.BX.Hack || {};
 	        },
 	        components: {//Chat
 	        },
-	        template: "\n\t\t\t\t<div class=\"artist-panel\">\n\t\t\t\t\t<button @click=\"selectBrush\">Brush</button>\n\t\t\t\t\t<button @click=\"selectErase\">Erase</button>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"selected-tool\">\n\t\t\t\t\tTool: {{tool}}\n\t\t\t\t</div>\n\t\t\t\t<div class=\"crocodile-container\">\n\t\t\t\t\t<canvas ref=\"crocodileCanvas\" width=\"600\" height=\"400\"></canvas>\n\t\t\t\t\t<div ref=\"crocodileChat\" class=\"crocodile-chat\">\n\t\t\t\t\t\t<div class=\"message\" v-for=\"msg of chat\">\n\t\t\t\t\t\t\t<div class=\"message-author\">{{msg.name}}</div>\n\t\t\t\t\t\t\t<div class=\"message-text\">{{msg.message}}</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t"
+	        template: "\n\t\t\t\t<div class=\"crocodile-container\">\n\t\t\t\t\t<div class=\"artist-panel\" v-if=\"isArtist\">\n\t\t\t\t\t\t<button @click=\"selectBrush\">Brush</button>\n\t\t\t\t\t\t<button @click=\"selectErase\">Erase</button>\n\t\t\t\t\t\t<div class=\"selected-tool\">\n\t\t\t\t\t\t\tTool: {{tool}}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"room-info\">\n\t\t\t\t\t\t<div class=\"room-artist\">{{artistName}}</div>\n\t\t\t\t\t\t<div class=\"room-word\">{{word}}</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"crocodile-game\">\n\t\t\t\t\t\t<canvas ref=\"crocodileCanvas\" width=\"600\" height=\"400\"></canvas>\n\t\t\t\t\t\t<div ref=\"crocodileChat\" class=\"crocodile-chat\">\n\t\t\t\t\t\t\t<div class=\"message\" v-for=\"msg of chat\">\n\t\t\t\t\t\t\t\t<div class=\"message-author\">{{msg.name}}</div>\n\t\t\t\t\t\t\t\t<div class=\"message-text\">{{msg.message}}</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t"
 	      }).mount(this.rootNode);
 	    }
 	  }]);
