@@ -36,6 +36,8 @@ this.BX.Hack = this.BX.Hack || {};
 	            imagePath: null,
 	            message: '',
 	            tool: 'brush',
+	            color: 'black',
+	            size: 5,
 	            ctx: null
 	          };
 	        },
@@ -61,7 +63,10 @@ this.BX.Hack = this.BX.Hack || {};
 	              }
 	            }).then(function (r) {
 	              _this.chat = r.data;
-	              _this.$refs.crocodileChat.scrollTop = _this.$refs.crocodileChat.scrollHeight;
+
+	              if (_this.$refs.crocodileChat) {
+	                _this.$refs.crocodileChat.scrollTop = _this.$refs.crocodileChat.scrollHeight;
+	              }
 	            });
 	            _this.ctx = _this.$refs.crocodileCanvas.getContext("2d");
 	            fetch('/getCrocodileImage', {
@@ -120,15 +125,33 @@ this.BX.Hack = this.BX.Hack || {};
 	          });
 	        },
 	        methods: {
+	          clearCanvas: function clearCanvas() {
+	            this.ctx.fillStyle = "#ffffff";
+	            this.ctx.rect(0, 0, 800, 600);
+	            this.ctx.fill();
+	            this.pictureUpdated();
+	          },
 	          selectBrush: function selectBrush() {
 	            this.tool = 'brush';
-	            this.ctx.strokeStyle = "#000000";
+	            this.ctx.strokeStyle = this.color;
 	            this.ctx.lineWidth = 4;
 	          },
 	          selectErase: function selectErase() {
 	            this.tool = 'erase';
 	            this.ctx.strokeStyle = "#ffffff";
 	            this.ctx.lineWidth = 16;
+	          },
+	          selectColor: function selectColor(color) {
+	            if (this.tool === 'erase') {
+	              return;
+	            }
+
+	            this.color = color;
+	            this.ctx.strokeStyle = color;
+	          },
+	          selectSize: function selectSize(size) {
+	            this.size = size;
+	            this.ctx.lineWidth = size;
 	          },
 	          pictureUpdated: function pictureUpdated() {
 	            if (this.isArtist) {
@@ -207,7 +230,7 @@ this.BX.Hack = this.BX.Hack || {};
 	            }
 	          }
 	        },
-	        template: "\n\t\t\t\t<div class=\"crocodile-container\">\n\t\t\t\t\t<div class=\"artist-panel\" v-if=\"isArtist\">\n\t\t\t\t\t\t<button @click=\"selectBrush\">Brush</button>\n\t\t\t\t\t\t<button @click=\"selectErase\">Erase</button>\n\t\t\t\t\t\t<div class=\"selected-tool\">\n\t\t\t\t\t\t\tTool: {{tool}}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"room-info\">\n\t\t\t\t\t\t<div class=\"room-artist\">\u0425\u0443\u0434\u043E\u0436\u043D\u0438\u043A: {{artistName}}</div>\n\t\t\t\t\t\t<div class=\"room-word\" v-if=\"isArtist\">{{word}}</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"crocodile-game\">\n\t\t\t\t\t\t<canvas ref=\"crocodileCanvas\" width=\"600\" height=\"400\"></canvas>\n\t\t\t\t\t\t<div class=\"crocodile-chat\">\n\t\t\t\t\t\t\t\u0427\u0430\u0442:\n\t\t\t\t\t\t\t<div ref=\"crocodileChat\" class=\"crocodile-messages\" v-if=\"chat && chat.length !== 0\">\n\t\t\t\t\t\t\t\t<div class=\"message\" v-for=\"msg of chat\">\n\t\t\t\t\t\t\t\t\t<div class=\"message-author\">{{msg.name}}</div>\n\t\t\t\t\t\t\t\t\t<div class=\"message-text\">{{msg.message}}</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<form ref=\"chatForm\" class=\"crocodile-chat-form\" v-if=\"!isArtist\">\n\t\t\t\t\t\t\t\t<input type=\"text\" placeholder=\"\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435\" class=\"crocodile-input\" v-model=\"message\">\n\t\t\t\t\t\t\t\t<input type=\"submit\" value=\"\u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C\">\n\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t"
+	        template: "\n\t\t\t\t<div class=\"crocodile-container\">\n\t\t\t\t\t<div class=\"artist-panel\" v-if=\"isArtist\">\n\t\t\t\t\t\t<div class=\"panel-row\">\n\t\t\t\t\t\t\t<button @click=\"selectBrush\">Brush</button>\n\t\t\t\t\t\t\t<button @click=\"selectErase\">Erase</button>\n\t\t\t\t\t\t\t<button @click=\"clearCanvas\">Clear all</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"panel-row\">\n\t\t\t\t\t\t\t<span @click=\"selectColor('black')\" style=\"background: black\" class=\"crocodile-color-select\"></span>\n\t\t\t\t\t\t\t<span @click=\"selectColor('red')\" style=\"background: red\" class=\"crocodile-color-select\"></span>\n\t\t\t\t\t\t\t<span @click=\"selectColor('orange')\" style=\"background: orange\" class=\"crocodile-color-select\"></span>\n\t\t\t\t\t\t\t<span @click=\"selectColor('yellow')\" style=\"background: yellow\" class=\"crocodile-color-select\"></span>\n\t\t\t\t\t\t\t<span @click=\"selectColor('green')\" style=\"background: green\" class=\"crocodile-color-select\"></span>\n\t\t\t\t\t\t\t<span @click=\"selectColor('blue')\" style=\"background: blue\" class=\"crocodile-color-select\"></span>\n\t\t\t\t\t\t\t<span @click=\"selectColor('magenta')\" style=\"background: magenta\" class=\"crocodile-color-select\"></span>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"panel-row\">\n\t\t\t\t\t\t\t<span @click=\"selectSize(5)\" :style=\"'width: 5px; background:' + color\" class=\"crocodile-size-select\"></span>\n\t\t\t\t\t\t\t<span @click=\"selectSize(10)\" :style=\"'width: 10px; background:' + color\" class=\"crocodile-size-select\"></span>\n\t\t\t\t\t\t\t<span @click=\"selectSize(15)\" :style=\"'width: 15px; background:' + color\" class=\"crocodile-size-select\"></span>\n\t\t\t\t\t\t\t<span @click=\"selectSize(20)\" :style=\"'width: 20px; background:' + color\" class=\"crocodile-size-select\"></span>\n\t\t\t\t\t\t\t<span @click=\"selectSize(25)\" :style=\"'width: 25px; background:' + color\" class=\"crocodile-size-select\"></span>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"tool-info\" v-if=\"isArtist\">\n\t\t\t\t\t\t<div class=\"selected-tool\" v-if=\"tool === 'erase'\">\n\t\t\t\t\t\tTool: {{tool}} {{size}}px\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"selected-tool\" v-else>\n\t\t\t\t\t\t\tTool: {{color}} {{tool}} {{size}}px\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"room-info\">\n\t\t\t\t\t\t<div class=\"room-artist\">\u0425\u0443\u0434\u043E\u0436\u043D\u0438\u043A: {{artistName}}</div>\n\t\t\t\t\t\t<div class=\"room-word\" v-if=\"isArtist\">{{word}}</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"crocodile-game\">\n\t\t\t\t\t\t<canvas ref=\"crocodileCanvas\" width=\"600\" height=\"400\"></canvas>\n\t\t\t\t\t\t<div class=\"crocodile-chat\">\n\t\t\t\t\t\t\t\u0427\u0430\u0442:\n\t\t\t\t\t\t\t<div ref=\"crocodileChat\" class=\"crocodile-messages\" v-if=\"chat && chat.length !== 0\">\n\t\t\t\t\t\t\t\t<div class=\"message\" v-for=\"msg of chat\">\n\t\t\t\t\t\t\t\t\t<div class=\"message-author\">{{msg.name}}</div>\n\t\t\t\t\t\t\t\t\t<div class=\"message-text\">{{msg.message}}</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<form ref=\"chatForm\" class=\"crocodile-chat-form\" v-if=\"!isArtist\">\n\t\t\t\t\t\t\t\t<input type=\"text\" placeholder=\"\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435\" class=\"crocodile-input\" v-model=\"message\">\n\t\t\t\t\t\t\t\t<input type=\"submit\" value=\"\u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C\">\n\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t"
 	      }).mount(this.rootNode);
 	    }
 	  }]);

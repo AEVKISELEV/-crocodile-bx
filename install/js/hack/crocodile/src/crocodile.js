@@ -38,6 +38,8 @@ export class CrocodileApplication
 					message: '',
 
 					tool: 'brush',
+					color: 'black',
+					size: 5,
 					ctx: null
 				}
 			},
@@ -63,7 +65,10 @@ export class CrocodileApplication
 						}
 					}).then(r => {
 						this.chat = r.data;
-						this.$refs.crocodileChat.scrollTop = this.$refs.crocodileChat.scrollHeight;
+						if (this.$refs.crocodileChat)
+						{
+							this.$refs.crocodileChat.scrollTop = this.$refs.crocodileChat.scrollHeight;
+						}
 					});
 
 					this.ctx = this.$refs.crocodileCanvas.getContext("2d");
@@ -120,15 +125,33 @@ export class CrocodileApplication
 				});
 			},
 			methods: {
+				clearCanvas() {
+					this.ctx.fillStyle = "#ffffff";
+					this.ctx.rect(0, 0, 800, 600);
+					this.ctx.fill();
+					this.pictureUpdated();
+				},
 				selectBrush() {
 					this.tool = 'brush';
-					this.ctx.strokeStyle = "#000000";
+					this.ctx.strokeStyle = this.color;
 					this.ctx.lineWidth = 4;
 				},
 				selectErase() {
 					this.tool = 'erase';
 					this.ctx.strokeStyle = "#ffffff";
 					this.ctx.lineWidth = 16;
+				},
+				selectColor(color) {
+					if (this.tool === 'erase')
+					{
+						return;
+					}
+					this.color = color;
+					this.ctx.strokeStyle = color;
+				},
+				selectSize(size) {
+					this.size = size;
+					this.ctx.lineWidth = size;
 				},
 				pictureUpdated() {
 					if (this.isArtist)
@@ -201,10 +224,34 @@ export class CrocodileApplication
 			template: `
 				<div class="crocodile-container">
 					<div class="artist-panel" v-if="isArtist">
-						<button @click="selectBrush">Brush</button>
-						<button @click="selectErase">Erase</button>
-						<div class="selected-tool">
-							Tool: {{tool}}
+						<div class="panel-row">
+							<button @click="selectBrush">Brush</button>
+							<button @click="selectErase">Erase</button>
+							<button @click="clearCanvas">Clear all</button>
+						</div>
+						<div class="panel-row">
+							<span @click="selectColor('black')" style="background: black" class="crocodile-color-select"></span>
+							<span @click="selectColor('red')" style="background: red" class="crocodile-color-select"></span>
+							<span @click="selectColor('orange')" style="background: orange" class="crocodile-color-select"></span>
+							<span @click="selectColor('yellow')" style="background: yellow" class="crocodile-color-select"></span>
+							<span @click="selectColor('green')" style="background: green" class="crocodile-color-select"></span>
+							<span @click="selectColor('blue')" style="background: blue" class="crocodile-color-select"></span>
+							<span @click="selectColor('magenta')" style="background: magenta" class="crocodile-color-select"></span>
+						</div>
+						<div class="panel-row">
+							<span @click="selectSize(5)" :style="'width: 5px; background:' + color" class="crocodile-size-select"></span>
+							<span @click="selectSize(10)" :style="'width: 10px; background:' + color" class="crocodile-size-select"></span>
+							<span @click="selectSize(15)" :style="'width: 15px; background:' + color" class="crocodile-size-select"></span>
+							<span @click="selectSize(20)" :style="'width: 20px; background:' + color" class="crocodile-size-select"></span>
+							<span @click="selectSize(25)" :style="'width: 25px; background:' + color" class="crocodile-size-select"></span>
+						</div>
+					</div>
+					<div class="tool-info" v-if="isArtist">
+						<div class="selected-tool" v-if="tool === 'erase'">
+						Tool: {{tool}} {{size}}px
+						</div>
+						<div class="selected-tool" v-else>
+							Tool: {{color}} {{tool}} {{size}}px
 						</div>
 					</div>
 					<div class="room-info">

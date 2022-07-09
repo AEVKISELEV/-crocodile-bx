@@ -8,6 +8,32 @@
 	margin: 10px 0 10px;
 }
 
+.panel-row {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+}
+
+.crocodile-color-select {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+}
+
+.crocodile-size-select {
+	display: inline-block;
+	aspect-ratio: 1;
+	border-radius: 50%;
+	margin: 5px;
+}
+
+.crocodile-size-select:hover {
+	border: 2px solid #0ae4ff;
+}
+
 .room-info {
 	display: -webkit-box;
 	display: -ms-flexbox;
