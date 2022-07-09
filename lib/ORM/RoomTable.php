@@ -1,12 +1,11 @@
 <?php
-namespace Up\Bitflix\Model;
 
-use Bitrix\Main\Entity\StringField,
+namespace Hack\Crocodile\ORM;
+
+use Bitrix\Main\ORM,
+	Bitrix\Main\Entity\StringField,
 	Bitrix\Main\ORM\Data\DataManager,
-	Bitrix\Main\ORM\Fields\IntegerField,
-
-	Loc::loadMessages(__FILE__);
-
+	Bitrix\Main\ORM\Fields\IntegerField;
 
 class RoomTable extends DataManager
 {

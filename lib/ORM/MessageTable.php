@@ -1,12 +1,11 @@
 <?php
-namespace Up\Bitflix\Model;
 
-use Bitrix\Main\Entity\TextField,
+namespace Hack\Crocodile\ORM;
+
+use Bitrix\Main\ORM,
+	Bitrix\Main\Entity\TextField,
 	Bitrix\Main\ORM\Data\DataManager,
-	Bitrix\Main\ORM\Fields\IntegerField,
-
-Loc::loadMessages(__FILE__);
-
+	Bitrix\Main\ORM\Fields\IntegerField;
 
 class MessageTable extends DataManager
 {

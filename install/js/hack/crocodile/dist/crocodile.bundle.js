@@ -78,6 +78,8 @@ this.BX.Hack = this.BX.Hack || {};
 	          var _this = this;
 
 	          BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom').then(function (response) {
+	            console.log(response.data);
+	            return;
 	            _this.artistName = response.data.artistName;
 	            _this.roomId = response.data.roomId;
 	            _this.userId = response.data.userId;
