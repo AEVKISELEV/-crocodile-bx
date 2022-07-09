@@ -11,7 +11,7 @@ this.BX.Hack = this.BX.Hack || {};
 	    if (main_core.Type.isStringFilled(options.rootNodeId)) {
 	      this.rootNode = document.getElementById(options.rootNodeId);
 	    } else {
-	      throw new Error('AdListApplication: options.rootNodeId required');
+	      throw new Error('CrocodileApplication: options.rootNodeId required');
 	    }
 	  }
 
@@ -28,10 +28,31 @@ this.BX.Hack = this.BX.Hack || {};
 	          return {//param: value
 	          };
 	        },
-	        mounted: function mounted() {},
+	        mounted: function mounted() {
+	          var canvas = this.$refs.crocodileCanvas;
+	          var ctx = canvas.getContext("2d");
+	          ctx.strokeStyle = "#000000";
+	          ctx.lineCap = "round";
+	          ctx.lineWidth = 4;
+
+	          canvas.onmousemove = function drawIfPressed(e) {
+	            var x = e.offsetX;
+	            var y = e.offsetY;
+	            var dx = e.movementX;
+	            var dy = e.movementY;
+
+	            if (e.buttons > 0) {
+	              ctx.beginPath();
+	              ctx.moveTo(x, y);
+	              ctx.lineTo(x - dx, y - dy);
+	              ctx.stroke();
+	              ctx.closePath();
+	            }
+	          };
+	        },
 	        components: {//Chat
 	        },
-	        template: "\n\t\t\t\t<div>\n\t\t\t\t\tvue component\n\t\t\t\t</div>\n\t\t\t"
+	        template: "\n\t\t\t\t<canvas ref=\"crocodileCanvas\" width=\"600\" height=\"400\"></canvas>\n\t\t\t"
 	      }).mount(this.rootNode);
 	    }
 	  }]);
