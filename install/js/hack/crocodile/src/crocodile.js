@@ -1,4 +1,4 @@
-import {Type, Dom, Loc} from 'main.core';
+import {Type, Dom, Loc, Tag} from 'main.core';
 import { BaseEvent, EventEmitter } from 'main.core.events';
 import { BitrixVue } from 'ui.vue3';
 import './crocodile.css';
@@ -163,6 +163,15 @@ export class CrocodileApplication
 					{
 						this.chat.push(event.params);
 						this.$refs.crocodileChat.scrollTop = this.$refs.crocodileChat.scrollHeight;
+					}
+					if (event.command === 'gameFinish')
+					{
+						const popup = new Popup(
+							{
+								content: Tag.render`<div>${event.params.winnerName}</div>`;
+							}
+						);
+						popup.show;
 					}
 				}
 			},

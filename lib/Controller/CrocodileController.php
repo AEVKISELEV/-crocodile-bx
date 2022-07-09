@@ -154,6 +154,10 @@ class CrocodileController extends Main\Engine\Controller
 		return $room['WORD'];
 	}
 
+	private function checkWord()
+	{
+	}
+
 	private function updateRoom($id, $artist_id, $word): void
 	{
 		$parameters = [
