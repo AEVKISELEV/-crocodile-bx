@@ -3,7 +3,7 @@
 namespace Hack\Crocodile\Controller;
 
 use Bitrix\Main;
-use Up\Bitflix\Model\RoomTable;
+use Hack\Crocodile\ORM\RoomTable;
 
 class CrocodileController extends Main\Engine\Controller
 {
@@ -13,7 +13,6 @@ class CrocodileController extends Main\Engine\Controller
 	{
 
 	}
-
 
 	public function getRoomAction()
 	{
@@ -43,6 +42,7 @@ class CrocodileController extends Main\Engine\Controller
 				'userID' => $userID,
 			];
 		}
+		return [];
 	}
 
 	private function getRoom()
@@ -62,6 +62,5 @@ class CrocodileController extends Main\Engine\Controller
 		];
 		RoomTable::update($id, $parameters);
 	}
-
 
 }
