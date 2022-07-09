@@ -45,12 +45,13 @@ export class CrocodileApplication
 				BX.PULL.subscribe({
 					type: BX.PullClient.SubscriptionType.Server,
 					moduleId: 'hack.crocodile',
-					callback: this.updateImage
+					callback: this.handlePullEvent
 				});
 				BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom').then(response => {
 					this.artistName = response.data.artistName;
 					this.roomId = response.data.roomId;
 					this.userId = response.data.userId;
+					this.userName = response.data.userName;
 					this.isArtist = response.data.isArtist;
 					this.word = response.data.word;
 					this.imagePath = response.data.imagePath;
@@ -109,6 +110,7 @@ export class CrocodileApplication
 							data: {
 								roomId: this.roomId,
 								userId: this.userId,
+								userName: this.userName,
 								message: this.message,
 							}
 						});
@@ -128,8 +130,15 @@ export class CrocodileApplication
 					this.ctx.strokeStyle = "#ffffff";
 					this.ctx.lineWidth = 16;
 				},
-				updateImage(data) {
-					console.log(data)
+				handlePullEvent(event) {
+					if (event.command === 'updateImage')
+					{
+
+					}
+					if (event.command === 'updateChat')
+					{
+						this.chat.append(event.params);
+					}
 				}
 			},
 			template: `

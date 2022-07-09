@@ -29,6 +29,7 @@ class CrocodileController extends Main\Engine\Controller
 			return [
 				'roomId' => $room['ID'],
 				'artistName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
+				'userName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
 				'isArtist' => true,
 				'word' => $room['WORD'],
 				'userID' => $userID,
@@ -41,6 +42,7 @@ class CrocodileController extends Main\Engine\Controller
 			return [
 				'roomId' => $room['ID'],
 				'artistName' => "{$artist['NAME']} {$artist['LAST_NAME']}",
+				'userName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
 				'isArtist' => false,
 				'userID' => $userID,
 			];
@@ -49,6 +51,7 @@ class CrocodileController extends Main\Engine\Controller
 		return [
 			'roomId' => $room['ID'],
 			'artistName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
+			'userName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
 			'isArtist' => true,
 			'word' => $room['WORD'],
 			'userID' => $userID,
@@ -88,7 +91,7 @@ class CrocodileController extends Main\Engine\Controller
         );
 	}
 
-	public function uploadMessageAction($roomId, $userId, $message)
+	public function uploadMessageAction($roomId, $userId, $message, $userName)
 	{
 		$parametrs = [
 			'ROOM_ID' => $roomId,
@@ -96,6 +99,16 @@ class CrocodileController extends Main\Engine\Controller
 			'MESSAGE' => $message
 		];
 		MessageTable::add($parametrs);
+		CPullWatch::AddToStack(
+			'crocodile', [
+				'module_id' => 'hack.crocodile',
+				'command' => 'updateImage',
+				'params' => [
+					'name' => $userName,
+					'message' => $message,
+				],
+			]
+		);
 	}
 
 	private function getRoom()
