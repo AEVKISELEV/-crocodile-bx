@@ -1,9 +1,9 @@
 this.BX = this.BX || {};
 this.BX.Hack = this.BX.Hack || {};
-(function (exports,main_core,main_popup,main_core_events,ui_vue3) {
+(function (exports,main_core,main_popup,ui_vue3) {
 	'use strict';
 
-	var _templateObject;
+	var _templateObject, _templateObject2;
 	var CrocodileApplication = /*#__PURE__*/function () {
 	  function CrocodileApplication() {
 	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -57,6 +57,36 @@ this.BX.Hack = this.BX.Hack || {};
 	            _this.isArtist = response.data.isArtist;
 	            _this.word = response.data.word;
 	            _this.imagePath = response.data.imagePath;
+
+	            if (_this.isArtist) {
+	              _this.popupWindow = new main_popup.Popup({
+	                width: 300,
+	                height: 200,
+	                content: main_core.Tag.render(_templateObject || (_templateObject = babelHelpers.taggedTemplateLiteral(["<div>\u0412\u044B \u0445\u043E\u0442\u0438\u0442\u0435 \u0431\u044B\u0442\u044C \u0445\u0443\u0434\u043E\u0436\u043D\u0438\u043A\u043E\u043C?</div>"]))),
+	                buttons: [new BX.PopupWindowButton({
+	                  text: 'да',
+	                  events: {
+	                    click: function click() {
+	                      _this.popupWindow.close();
+	                    }
+	                  }
+	                }), new BX.PopupWindowButton({
+	                  text: 'нет',
+	                  events: {
+	                    click: function click() {
+	                      BX.ajax.runAction('hack:crocodile.CrocodileController.changePainter', {
+	                        data: {
+	                          roomId: _this.roomId
+	                        }
+	                      });
+	                    }
+	                  }
+	                })]
+	              });
+
+	              _this.popupWindow.show();
+	            }
+
 	            BX.ajax.runAction('hack:crocodile.CrocodileController.getChat', {
 	              data: {
 	                roomId: _this.roomId
@@ -194,11 +224,21 @@ this.BX.Hack = this.BX.Hack || {};
 	              this.$refs.crocodileChat.scrollTop = this.$refs.crocodileChat.scrollHeight;
 	            }
 
+	            if (event.command === 'reloadGame') {
+	              if (this.isArtist) {
+	                setTimeout(function () {
+	                  document.location.reload();
+	                }, 1000);
+	              } else {
+	                document.location.reload();
+	              }
+	            }
+
 	            if (event.command === 'gameFinish') {
 	              var popup = new main_popup.Popup({
 	                width: 300,
 	                height: 200,
-	                content: main_core.Tag.render(_templateObject || (_templateObject = babelHelpers.taggedTemplateLiteral(["<div>", " \u043F\u043E\u0431\u0435\u0434\u0438\u043B!</div>"])), event.params.winnerName),
+	                content: main_core.Tag.render(_templateObject2 || (_templateObject2 = babelHelpers.taggedTemplateLiteral(["<div>", " \u043F\u043E\u0431\u0435\u0434\u0438\u043B!</div>"])), event.params.winnerName),
 	                closeIcon: true,
 	                events: {
 	                  onClose: function onClose() {
@@ -239,5 +279,5 @@ this.BX.Hack = this.BX.Hack || {};
 
 	exports.CrocodileApplication = CrocodileApplication;
 
-}((this.BX.Hack.Crocodile = this.BX.Hack.Crocodile || {}),BX,BX.Main,BX.Event,BX.Vue3));
+}((this.BX.Hack.Crocodile = this.BX.Hack.Crocodile || {}),BX,BX.Main,BX.Vue3));
 //# sourceMappingURL=crocodile.bundle.js.map

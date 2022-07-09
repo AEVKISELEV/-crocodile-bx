@@ -1,6 +1,5 @@
-import {Type, Dom, Loc, Tag} from 'main.core';
+import {Type, Loc, Tag} from 'main.core';
 import {Popup} from 'main.popup';
-import { BaseEvent, EventEmitter } from 'main.core.events';
 import { BitrixVue } from 'ui.vue3';
 import './crocodile.css';
 
@@ -58,6 +57,40 @@ export class CrocodileApplication
 					this.isArtist = response.data.isArtist;
 					this.word = response.data.word;
 					this.imagePath = response.data.imagePath;
+
+					if (this.isArtist)
+					{
+						this.popupWindow = new Popup(
+							{
+								width: 300,
+								height: 200,
+								content: Tag.render`<div>Вы хотите быть художником?</div>`,
+								buttons: [
+									new BX.PopupWindowButton({
+										text: 'да',
+										events: {
+											click: () => {
+												this.popupWindow.close();
+											}
+										}
+									}),
+									new BX.PopupWindowButton({
+										text: 'нет',
+										events: {
+											click: () => {
+												BX.ajax.runAction('hack:crocodile.CrocodileController.changePainter', {
+													data: {
+														roomId: this.roomId,
+													}
+												});
+											}
+										}
+									})
+								]
+							}
+						);
+						this.popupWindow.show();
+					}
 
 					BX.ajax.runAction('hack:crocodile.CrocodileController.getChat',{
 						data: {
@@ -186,6 +219,19 @@ export class CrocodileApplication
 					{
 						this.chat.push(event.params);
 						this.$refs.crocodileChat.scrollTop = this.$refs.crocodileChat.scrollHeight;
+					}
+					if (event.command === 'reloadGame')
+					{
+						if (this.isArtist)
+						{
+							setTimeout(() => {
+								document.location.reload();
+							}, 1000)
+						}
+						else
+						{
+							document.location.reload();
+						}
 					}
 					if (event.command === 'gameFinish')
 					{

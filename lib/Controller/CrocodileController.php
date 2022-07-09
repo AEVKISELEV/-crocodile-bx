@@ -65,6 +65,19 @@ class CrocodileController extends Main\Engine\Controller
 		];
 	}
 
+	public function changePainterAction(int $roomId)
+	{
+		$randomWord = $this->words[array_rand($this->words)];
+		$this->updateRoom($roomId, 0, $randomWord);
+		CPullWatch::AddToStack(
+			'crocodile', [
+				'module_id' => 'hack.crocodile',
+				'command' => 'reloadGame',
+				'params' => [],
+			]
+		);
+	}
+
 	public function getChatAction($roomId): array
 	{
 		global $USER;
