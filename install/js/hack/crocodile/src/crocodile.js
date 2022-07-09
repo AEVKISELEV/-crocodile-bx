@@ -26,21 +26,7 @@ export class CrocodileApplication
 		BitrixVue.createApp({
 			data() {
 				return {
-					chat:
-						[
-							{name: 'Петр Попов', message: 'рекурсия'},
-							{name: 'Артём Киселёв', message: 'массажное кресло'},
-							{name: 'Артём Киселёв', message: 'массажное кресло'},
-							{name: 'Артём Киселёв', message: 'массажное кресло'},
-							{name: 'Артём Киселёв', message: 'массажное кресло'},
-							{name: 'Артём Киселёв', message: 'массажное кресло'},
-							{name: 'Артём Киселёв', message: 'массажное кресло'},
-							{name: 'Артём Киселёв', message: 'массажное кресло'},
-							{name: 'Артём Киселёв', message: 'массажное кресло'},
-							{name: 'Артём Киселёв', message: 'массажное кресло'},
-							{name: 'Артём Киселёв', message: 'массажное кресло'},
-							{name: 'Артём Киселёв', message: 'массажное кресло'},
-						],
+					chat: [],
 					artistName: 'Художник',
 					roomId: null,
 					userId: null,
@@ -69,7 +55,7 @@ export class CrocodileApplication
 							roomId: this.roomId
 						}
 					}).then(r => {
-						this.chat = r.data.chat;
+						this.chat = r.data;
 						this.$refs.crocodileChat.scrollTop = this.$refs.crocodileChat.scrollHeight;
 					});
 
@@ -105,13 +91,9 @@ export class CrocodileApplication
 							let file = new File([blob], "crocodile.png", { type: "image/png" });
 							let formData = new FormData();
 							formData.append('crocodile.png', file);
-							fetch('/uploadImage', {method: "POST", body: formData})
-								.then((response) => {
-									return response.json();
-								})
-								.then((data) => {
-									console.log(data)
-								});
+							BX.ajax.post('/uploadImage', formData, (data) => {
+								console.log(data)
+							})
 						}, 'image/png');
 					};
 

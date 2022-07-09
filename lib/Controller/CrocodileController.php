@@ -25,7 +25,7 @@ class CrocodileController extends Main\Engine\Controller
 		{
 			$this->updateRoom($room['ID'], $userID);
 			return [
-				'idRoom' => $room['ID'],
+				'roomId' => $room['ID'],
 				'artistName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
 				'isArtist' => true,
 				'word' => $room['WORD'],
@@ -37,7 +37,7 @@ class CrocodileController extends Main\Engine\Controller
 		if ($artist['ID'] !== $userID)
 		{
 			return [
-				'idRoom' => $room['ID'],
+				'roomId' => $room['ID'],
 				'artistName' => "{$artist['NAME']} {$artist['LAST_NAME']}",
 				'isArtist' => false,
 				'userID' => $userID,
@@ -45,7 +45,7 @@ class CrocodileController extends Main\Engine\Controller
 		}
 
 		return [
-			'idRoom' => $room['ID'],
+			'roomId' => $room['ID'],
 			'artistName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
 			'isArtist' => true,
 			'word' => $room['WORD'],
@@ -60,7 +60,7 @@ class CrocodileController extends Main\Engine\Controller
 			'select' => ['*'],
 			'filter' => ['ROOM_ID' => $roomId]
 		];
-		$messages = RoomTable::getList($parameters)->fetchAll();
+		$messages = MessageTable::getList($parameters)->fetchAll();
 		$arrayMessages = [];
 		foreach ($messages as $message)
 		{

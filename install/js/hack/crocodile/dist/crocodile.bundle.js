@@ -26,43 +26,7 @@ this.BX.Hack = this.BX.Hack || {};
 	      ui_vue3.BitrixVue.createApp({
 	        data: function data() {
 	          return {
-	            chat: [{
-	              name: 'Петр Попов',
-	              message: 'рекурсия'
-	            }, {
-	              name: 'Артём Киселёв',
-	              message: 'массажное кресло'
-	            }, {
-	              name: 'Артём Киселёв',
-	              message: 'массажное кресло'
-	            }, {
-	              name: 'Артём Киселёв',
-	              message: 'массажное кресло'
-	            }, {
-	              name: 'Артём Киселёв',
-	              message: 'массажное кресло'
-	            }, {
-	              name: 'Артём Киселёв',
-	              message: 'массажное кресло'
-	            }, {
-	              name: 'Артём Киселёв',
-	              message: 'массажное кресло'
-	            }, {
-	              name: 'Артём Киселёв',
-	              message: 'массажное кресло'
-	            }, {
-	              name: 'Артём Киселёв',
-	              message: 'массажное кресло'
-	            }, {
-	              name: 'Артём Киселёв',
-	              message: 'массажное кресло'
-	            }, {
-	              name: 'Артём Киселёв',
-	              message: 'массажное кресло'
-	            }, {
-	              name: 'Артём Киселёв',
-	              message: 'массажное кресло'
-	            }],
+	            chat: [],
 	            artistName: 'Художник',
 	            roomId: null,
 	            userId: null,
@@ -90,7 +54,7 @@ this.BX.Hack = this.BX.Hack || {};
 	                roomId: _this.roomId
 	              }
 	            }).then(function (r) {
-	              _this.chat = r.data.chat;
+	              _this.chat = r.data;
 	              _this.$refs.crocodileChat.scrollTop = _this.$refs.crocodileChat.scrollHeight;
 	            });
 	            _this.ctx = _this.$refs.crocodileCanvas.getContext("2d");
@@ -132,12 +96,7 @@ this.BX.Hack = this.BX.Hack || {};
 	                });
 	                var formData = new FormData();
 	                formData.append('crocodile.png', file);
-	                fetch('/uploadImage', {
-	                  method: "POST",
-	                  body: formData
-	                }).then(function (response) {
-	                  return response.json();
-	                }).then(function (data) {
+	                BX.ajax.post('/uploadImage', formData, function (data) {
 	                  console.log(data);
 	                });
 	              }, 'image/png');
