@@ -27,7 +27,7 @@ this.BX.Hack = this.BX.Hack || {};
 	        data: function data() {
 	          return {
 	            chat: [{
-	              name: 'Петр Попов',
+	              name: 'Petr Popov',
 	              message: 'рекурсия'
 	            }, {
 	              name: 'Артём Киселёв',
