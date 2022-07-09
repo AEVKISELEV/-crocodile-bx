@@ -142,7 +142,7 @@ this.BX.Hack = this.BX.Hack || {};
 
 	          this.$refs.chatForm.addEventListener('submit', function (e) {
 	            e.preventDefault();
-	            BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom', {
+	            BX.ajax.runAction('hack:crocodile.CrocodileController.uploadMessage', {
 	              data: {
 	                roomId: _this.roomId,
 	                userId: _this.userId,

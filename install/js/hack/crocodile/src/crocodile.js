@@ -118,7 +118,7 @@ export class CrocodileApplication
 
 				this.$refs.chatForm.addEventListener('submit', (e) => {
 					e.preventDefault();
-					BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom', {
+					BX.ajax.runAction('hack:crocodile.CrocodileController.uploadMessage', {
 						data: {
 							roomId: this.roomId,
 							userId: this.userId,
