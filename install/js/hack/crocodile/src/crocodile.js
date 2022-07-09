@@ -73,60 +73,60 @@ export class CrocodileApplication
 						this.$refs.crocodileChat.scrollTop = this.$refs.crocodileChat.scrollHeight;
 					});
 
-				});
+					this.ctx = this.$refs.crocodileCanvas.getContext("2d");
+					this.ctx.fillStyle = "#ffffff";
+					this.ctx.rect(0, 0, this.$refs.crocodileCanvas.width, this.$refs.crocodileCanvas.height);
+					this.ctx.fill();
 
-				this.ctx = this.$refs.crocodileCanvas.getContext("2d");
-				this.ctx.fillStyle = "#ffffff";
-				this.ctx.rect(0, 0, this.$refs.crocodileCanvas.width, this.$refs.crocodileCanvas.height);
-				this.ctx.fill();
+					this.ctx.strokeStyle = "#000000";
+					this.ctx.lineCap = "round";
+					this.ctx.lineWidth = 4;
 
-				this.ctx.strokeStyle = "#000000";
-				this.ctx.lineCap = "round";
-				this.ctx.lineWidth = 4;
+					this.$refs.crocodileCanvas.onmousemove = (e) => {
+						if (this.isArtist)
+						{
+							const x = e.offsetX;
+							const y = e.offsetY;
+							const dx = e.movementX;
+							const dy = e.movementY;
 
-				this.$refs.crocodileCanvas.onmousemove = (e) => {
-					if (this.isArtist)
-					{
-						const x = e.offsetX;
-						const y = e.offsetY;
-						const dx = e.movementX;
-						const dy = e.movementY;
-
-						if (e.buttons > 0) {
-							this.ctx.beginPath();
-							this.ctx.moveTo(x, y);
-							this.ctx.lineTo(x - dx, y - dy);
-							this.ctx.stroke();
-							this.ctx.closePath();
+							if (e.buttons > 0) {
+								this.ctx.beginPath();
+								this.ctx.moveTo(x, y);
+								this.ctx.lineTo(x - dx, y - dy);
+								this.ctx.stroke();
+								this.ctx.closePath();
+							}
 						}
-					}
-				};
+					};
 
-				this.$refs.crocodileCanvas.onmouseup = () => {
-					this.$refs.crocodileCanvas.toBlob((blob) => {
-						let file = new File([blob], "crocodile.png", { type: "image/png" });
-						let formData = new FormData();
-						formData.append('crocodile.png', file);
-						fetch('/uploadImage', {method: "POST", body: formData})
-							.then((response) => {
-								return response.json();
-							})
-							.then((data) => {
-								console.log(data)
-							});
-					}, 'image/png');
-				};
+					this.$refs.crocodileCanvas.onmouseup = () => {
+						this.$refs.crocodileCanvas.toBlob((blob) => {
+							let file = new File([blob], "crocodile.png", { type: "image/png" });
+							let formData = new FormData();
+							formData.append('crocodile.png', file);
+							fetch('/uploadImage', {method: "POST", body: formData})
+								.then((response) => {
+									return response.json();
+								})
+								.then((data) => {
+									console.log(data)
+								});
+						}, 'image/png');
+					};
 
-				this.$refs.chatForm.addEventListener('submit', (e) => {
-					e.preventDefault();
-					BX.ajax.runAction('hack:crocodile.CrocodileController.uploadMessage', {
-						data: {
-							roomId: this.roomId,
-							userId: this.userId,
-							message: this.message,
-						}
+					this.$refs.chatForm.addEventListener('submit', (e) => {
+						e.preventDefault();
+						BX.ajax.runAction('hack:crocodile.CrocodileController.uploadMessage', {
+							data: {
+								roomId: this.roomId,
+								userId: this.userId,
+								message: this.message,
+							}
+						});
+						this.message = '';
 					});
-					this.message = '';
+
 				});
 			},
 			methods: {
