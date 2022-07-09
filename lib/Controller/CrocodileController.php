@@ -9,12 +9,18 @@ use Hack\Crocodile\ORM\RoomTable;
 
 class CrocodileController extends Main\Engine\Controller
 {
-	private array $words = ['рекурси€'];
-
-	public function editRoomAction(int $roomId, int $artistId, int $pictureId): void
-	{
-
-	}
+	private array $words = [
+		'рекурси€',
+		'битрикс',
+		'переговорка',
+		'ћассажное кресло',
+		'теннисный стол',
+		'зарплата',
+		'обед',
+		'баг',
+		'портал',
+		'корпоратив'
+	];
 
 	public function getRoomAction()
 	{
@@ -25,7 +31,7 @@ class CrocodileController extends Main\Engine\Controller
 
 		if((int)$room['ARTIST_ID'] === 0)
 		{
-			$this->updateRoom($room['ID'], $userID);
+			$this->updateRoom($room['ID'], $userID, $this->words[array_rand($this->words)]);
 			return [
 				'roomId' => $room['ID'],
 				'artistName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
@@ -121,10 +127,11 @@ class CrocodileController extends Main\Engine\Controller
 		return RoomTable::getList($parameters)->fetch();
 	}
 
-	private function updateRoom($id, $artist_id): void
+	private function updateRoom($id, $artist_id, $word): void
 	{
 		$parameters = [
-			'ARTIST_ID' => $artist_id
+			'ARTIST_ID' => $artist_id,
+			'WORD' => $word
 		];
 		RoomTable::update($id, $parameters);
 	}
