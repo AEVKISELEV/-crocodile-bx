@@ -1,8 +1,9 @@
 this.BX = this.BX || {};
 this.BX.Hack = this.BX.Hack || {};
-(function (exports,main_core,main_core_events,ui_vue3) {
+(function (exports,main_core,main_popup,main_core_events,ui_vue3) {
 	'use strict';
 
+	var _templateObject;
 	var CrocodileApplication = /*#__PURE__*/function () {
 	  function CrocodileApplication() {
 	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -150,7 +151,7 @@ this.BX.Hack = this.BX.Hack || {};
 	          handlePullEvent: function handlePullEvent(event) {
 	            var _this2 = this;
 
-	            if (event.command === 'updateImage') {
+	            if (event.command === 'updateImage' && !this.isArtist) {
 	              fetch('/getCrocodileImage', {
 	                method: "GET"
 	              }).then(function (response) {
@@ -170,6 +171,15 @@ this.BX.Hack = this.BX.Hack || {};
 	              this.chat.push(event.params);
 	              this.$refs.crocodileChat.scrollTop = this.$refs.crocodileChat.scrollHeight;
 	            }
+
+	            if (event.command === 'gameFinish') {
+	              var popup = new main_popup.Popup({
+	                width: 300,
+	                height: 200,
+	                content: main_core.Tag.render(_templateObject || (_templateObject = babelHelpers.taggedTemplateLiteral(["<div>", "</div>"])), event.params.winnerName)
+	              });
+	              popup.show();
+	            }
 	          }
 	        },
 	        template: "\n\t\t\t\t<div class=\"crocodile-container\">\n\t\t\t\t\t<div class=\"artist-panel\" v-if=\"isArtist\">\n\t\t\t\t\t\t<button @click=\"selectBrush\">Brush</button>\n\t\t\t\t\t\t<button @click=\"selectErase\">Erase</button>\n\t\t\t\t\t\t<div class=\"selected-tool\">\n\t\t\t\t\t\t\tTool: {{tool}}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"room-info\">\n\t\t\t\t\t\t<div class=\"room-artist\">{{artistName}}</div>\n\t\t\t\t\t\t<div class=\"room-word\" v-if=\"isArtist\">{{word}}</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"crocodile-game\">\n\t\t\t\t\t\t<canvas ref=\"crocodileCanvas\" width=\"600\" height=\"400\"></canvas>\n\t\t\t\t\t\t<div class=\"crocodile-chat\">\n\t\t\t\t\t\t\t<div ref=\"crocodileChat\" class=\"crocodile-messages\">\n\t\t\t\t\t\t\t\t<div class=\"message\" v-for=\"msg of chat\">\n\t\t\t\t\t\t\t\t\t<div class=\"message-author\">{{msg.name}}</div>\n\t\t\t\t\t\t\t\t\t<div class=\"message-text\">{{msg.message}}</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<form ref=\"chatForm\" class=\"crocodile-chat-form\" v-if=\"!isArtist\">\n\t\t\t\t\t\t\t\t<input type=\"text\" placeholder=\"\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435\" class=\"crocodile-input\" v-model=\"message\">\n\t\t\t\t\t\t\t\t<input type=\"submit\" value=\"\u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C\">\n\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t"
@@ -181,5 +191,5 @@ this.BX.Hack = this.BX.Hack || {};
 
 	exports.CrocodileApplication = CrocodileApplication;
 
-}((this.BX.Hack.Crocodile = this.BX.Hack.Crocodile || {}),BX,BX.Event,BX.Vue3));
+}((this.BX.Hack.Crocodile = this.BX.Hack.Crocodile || {}),BX,BX.Main,BX.Event,BX.Vue3));
 //# sourceMappingURL=crocodile.bundle.js.map

@@ -9,6 +9,7 @@ return [
 	'js' => 'dist/crocodile.bundle.js',
 	'rel' => [
 		'main.core',
+		'main.popup',
 		'main.core.events',
 		'ui.vue3',
 	],

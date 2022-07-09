@@ -1,4 +1,5 @@
 import {Type, Dom, Loc, Tag} from 'main.core';
+import {Popup} from 'main.popup';
 import { BaseEvent, EventEmitter } from 'main.core.events';
 import { BitrixVue } from 'ui.vue3';
 import './crocodile.css';
@@ -145,7 +146,7 @@ export class CrocodileApplication
 					this.ctx.lineWidth = 16;
 				},
 				handlePullEvent(event) {
-					if (event.command === 'updateImage')
+					if (event.command === 'updateImage' && !this.isArtist)
 					{
 						fetch('/getCrocodileImage', {method: "GET"})
 							.then((response) => {
@@ -168,10 +169,12 @@ export class CrocodileApplication
 					{
 						const popup = new Popup(
 							{
-								content: Tag.render`<div>${event.params.winnerName}</div>`;
+								width: 300,
+								height: 200,
+								content: Tag.render`<div>${event.params.winnerName}</div>`
 							}
 						);
-						popup.show;
+						popup.show();
 					}
 				}
 			},
