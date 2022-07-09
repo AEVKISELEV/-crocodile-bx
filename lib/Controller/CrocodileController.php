@@ -38,7 +38,7 @@ class CrocodileController extends Main\Engine\Controller
 				'userName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
 				'isArtist' => true,
 				'word' => $room['WORD'],
-				'userID' => $userID,
+				'userId' => $userID,
 			];
 		}
 
@@ -50,7 +50,7 @@ class CrocodileController extends Main\Engine\Controller
 				'artistName' => "{$artist['NAME']} {$artist['LAST_NAME']}",
 				'userName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
 				'isArtist' => false,
-				'userID' => $userID,
+				'userId' => $userID,
 			];
 		}
 
@@ -60,7 +60,7 @@ class CrocodileController extends Main\Engine\Controller
 			'userName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
 			'isArtist' => true,
 			'word' => $room['WORD'],
-			'userID' => $userID,
+			'userId' => $userID,
 		];
 	}
 
@@ -108,7 +108,7 @@ class CrocodileController extends Main\Engine\Controller
 		CPullWatch::AddToStack(
 			'crocodile', [
 				'module_id' => 'hack.crocodile',
-				'command' => 'updateImage',
+				'command' => 'updateChat',
 				'params' => [
 					'name' => $userName,
 					'message' => $message,
