@@ -36,6 +36,7 @@ canvas {
 	flex-direction: column;
 	border: 1px solid #000;
 	overflow-y: auto;
+	margin-top: 5px;
 }
 
 .message {

@@ -214,7 +214,8 @@ export class CrocodileApplication
 					<div class="crocodile-game">
 						<canvas ref="crocodileCanvas" width="600" height="400"></canvas>
 						<div class="crocodile-chat">
-							<div ref="crocodileChat" class="crocodile-messages">
+							зрђ:
+							<div ref="crocodileChat" class="crocodile-messages" v-if="chat && chat.length !== 0">
 								<div class="message" v-for="msg of chat">
 									<div class="message-author">{{msg.name}}</div>
 									<div class="message-text">{{msg.message}}</div>
