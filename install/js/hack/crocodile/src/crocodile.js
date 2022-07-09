@@ -29,13 +29,25 @@ export class CrocodileApplication
 					chat:
 						[
 							{name: 'Петр Попов', message: 'рекурсия'},
-							{name: 'Артём Киселёв', message: 'массажное кресло'}
+							{name: 'Артём Киселёв', message: 'массажное кресло'},
+							{name: 'Артём Киселёв', message: 'массажное кресло'},
+							{name: 'Артём Киселёв', message: 'массажное кресло'},
+							{name: 'Артём Киселёв', message: 'массажное кресло'},
+							{name: 'Артём Киселёв', message: 'массажное кресло'},
+							{name: 'Артём Киселёв', message: 'массажное кресло'},
+							{name: 'Артём Киселёв', message: 'массажное кресло'},
+							{name: 'Артём Киселёв', message: 'массажное кресло'},
+							{name: 'Артём Киселёв', message: 'массажное кресло'},
+							{name: 'Артём Киселёв', message: 'массажное кресло'},
+							{name: 'Артём Киселёв', message: 'массажное кресло'},
 						],
 					artistName: 'Художник',
 					roomId: null,
-					isArtist: true,
+					userId: null,
+					isArtist: false,
 					word: 'рекурсия',
 					imagePath: null,
+					message: '',
 
 					tool: 'brush',
 					ctx: null
@@ -46,6 +58,7 @@ export class CrocodileApplication
 				BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom').then(response => {
 					this.artistName = response.data.artistName;
 					this.roomId = response.data.roomId;
+					this.userId = response.data.userId;
 					this.isArtist = response.data.isArtist;
 					this.word = response.data.word;
 					this.imagePath = response.data.imagePath;
@@ -56,35 +69,64 @@ export class CrocodileApplication
 						}
 					}).then(r => {
 						this.chat = r.data.chat;
+						this.$refs.crocodileChat.scrollTop = this.$refs.crocodileChat.scrollHeight;
 					});
 
 				});
 
-				const canvas = this.$refs.crocodileCanvas;
-				this.ctx = canvas.getContext("2d");
-
+				this.ctx = this.$refs.crocodileCanvas.getContext("2d");
 				this.ctx.fillStyle = "#ffffff";
-				this.ctx.rect(0, 0, canvas.width, canvas.height);
+				this.ctx.rect(0, 0, this.$refs.crocodileCanvas.width, this.$refs.crocodileCanvas.height);
 				this.ctx.fill();
 
 				this.ctx.strokeStyle = "#000000";
 				this.ctx.lineCap = "round";
 				this.ctx.lineWidth = 4;
 
-				canvas.onmousemove = (e) => {
-					const x = e.offsetX;
-					const y = e.offsetY;
-					const dx = e.movementX;
-					const dy = e.movementY;
+				this.$refs.crocodileCanvas.onmousemove = (e) => {
+					if (this.isArtist)
+					{
+						const x = e.offsetX;
+						const y = e.offsetY;
+						const dx = e.movementX;
+						const dy = e.movementY;
 
-					if (e.buttons > 0) {
-						this.ctx.beginPath();
-						this.ctx.moveTo(x, y);
-						this.ctx.lineTo(x - dx, y - dy);
-						this.ctx.stroke();
-						this.ctx.closePath();
+						if (e.buttons > 0) {
+							this.ctx.beginPath();
+							this.ctx.moveTo(x, y);
+							this.ctx.lineTo(x - dx, y - dy);
+							this.ctx.stroke();
+							this.ctx.closePath();
+						}
 					}
 				};
+
+				this.$refs.crocodileCanvas.onmouseup = () => {
+					this.$refs.crocodileCanvas.toBlob((blob) => {
+						let file = new File([blob], "crocodile.png", { type: "image/png" });
+						let formData = new FormData();
+						formData.append('crocodile.png', file);
+						fetch('/uploadImage', {method: "POST", body: formData})
+							.then((response) => {
+								return response.json();
+							})
+							.then((data) => {
+								console.log(data)
+							});
+					}, 'image/png');
+				};
+
+				this.$refs.chatForm.addEventListener('submit', (e) => {
+					e.preventDefault();
+					BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom', {
+						data: {
+							roomId: this.roomId,
+							userId: this.userId,
+							message: this.message,
+						}
+					});
+					this.message = '';
+				});
 			},
 			methods: {
 				selectBrush() {
@@ -112,15 +154,21 @@ export class CrocodileApplication
 					</div>
 					<div class="room-info">
 						<div class="room-artist">{{artistName}}</div>
-						<div class="room-word">{{word}}</div>
+						<div class="room-word" v-if="isArtist">{{word}}</div>
 					</div>
 					<div class="crocodile-game">
 						<canvas ref="crocodileCanvas" width="600" height="400"></canvas>
-						<div ref="crocodileChat" class="crocodile-chat">
-							<div class="message" v-for="msg of chat">
-								<div class="message-author">{{msg.name}}</div>
-								<div class="message-text">{{msg.message}}</div>
+						<div class="crocodile-chat">
+							<div ref="crocodileChat" class="crocodile-messages">
+								<div class="message" v-for="msg of chat">
+									<div class="message-author">{{msg.name}}</div>
+									<div class="message-text">{{msg.message}}</div>
+								</div>
 							</div>
+							<form ref="chatForm" class="crocodile-chat-form" v-if="!isArtist">
+								<input type="text" placeholder="Введите сообщение" class="crocodile-input" v-model="message">
+								<input type="submit" value="отправить">
+							</form>
 						</div>
 					</div>
 				</div>

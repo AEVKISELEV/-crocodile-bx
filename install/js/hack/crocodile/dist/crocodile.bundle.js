@@ -32,12 +32,44 @@ this.BX.Hack = this.BX.Hack || {};
 	            }, {
 	              name: 'Артём Киселёв',
 	              message: 'массажное кресло'
+	            }, {
+	              name: 'Артём Киселёв',
+	              message: 'массажное кресло'
+	            }, {
+	              name: 'Артём Киселёв',
+	              message: 'массажное кресло'
+	            }, {
+	              name: 'Артём Киселёв',
+	              message: 'массажное кресло'
+	            }, {
+	              name: 'Артём Киселёв',
+	              message: 'массажное кресло'
+	            }, {
+	              name: 'Артём Киселёв',
+	              message: 'массажное кресло'
+	            }, {
+	              name: 'Артём Киселёв',
+	              message: 'массажное кресло'
+	            }, {
+	              name: 'Артём Киселёв',
+	              message: 'массажное кресло'
+	            }, {
+	              name: 'Артём Киселёв',
+	              message: 'массажное кресло'
+	            }, {
+	              name: 'Артём Киселёв',
+	              message: 'массажное кресло'
+	            }, {
+	              name: 'Артём Киселёв',
+	              message: 'массажное кресло'
 	            }],
 	            artistName: 'Художник',
 	            roomId: null,
-	            isArtist: true,
+	            userId: null,
+	            isArtist: false,
 	            word: 'рекурсия',
 	            imagePath: null,
+	            message: '',
 	            tool: 'brush',
 	            ctx: null
 	          };
@@ -48,6 +80,7 @@ this.BX.Hack = this.BX.Hack || {};
 	          BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom').then(function (response) {
 	            _this.artistName = response.data.artistName;
 	            _this.roomId = response.data.roomId;
+	            _this.userId = response.data.userId;
 	            _this.isArtist = response.data.isArtist;
 	            _this.word = response.data.word;
 	            _this.imagePath = response.data.imagePath;
@@ -57,35 +90,67 @@ this.BX.Hack = this.BX.Hack || {};
 	              }
 	            }).then(function (r) {
 	              _this.chat = r.data.chat;
+	              _this.$refs.crocodileChat.scrollTop = _this.$refs.crocodileChat.scrollHeight;
 	            });
 	          });
-	          var canvas = this.$refs.crocodileCanvas;
-	          this.ctx = canvas.getContext("2d");
+	          this.ctx = this.$refs.crocodileCanvas.getContext("2d");
 	          this.ctx.fillStyle = "#ffffff";
-	          this.ctx.rect(0, 0, canvas.width, canvas.height);
+	          this.ctx.rect(0, 0, this.$refs.crocodileCanvas.width, this.$refs.crocodileCanvas.height);
 	          this.ctx.fill();
 	          this.ctx.strokeStyle = "#000000";
 	          this.ctx.lineCap = "round";
 	          this.ctx.lineWidth = 4;
 
-	          canvas.onmousemove = function (e) {
-	            var x = e.offsetX;
-	            var y = e.offsetY;
-	            var dx = e.movementX;
-	            var dy = e.movementY;
+	          this.$refs.crocodileCanvas.onmousemove = function (e) {
+	            if (_this.isArtist) {
+	              var x = e.offsetX;
+	              var y = e.offsetY;
+	              var dx = e.movementX;
+	              var dy = e.movementY;
 
-	            if (e.buttons > 0) {
-	              _this.ctx.beginPath();
+	              if (e.buttons > 0) {
+	                _this.ctx.beginPath();
 
-	              _this.ctx.moveTo(x, y);
+	                _this.ctx.moveTo(x, y);
 
-	              _this.ctx.lineTo(x - dx, y - dy);
+	                _this.ctx.lineTo(x - dx, y - dy);
 
-	              _this.ctx.stroke();
+	                _this.ctx.stroke();
 
-	              _this.ctx.closePath();
+	                _this.ctx.closePath();
+	              }
 	            }
 	          };
+
+	          this.$refs.crocodileCanvas.onmouseup = function () {
+	            _this.$refs.crocodileCanvas.toBlob(function (blob) {
+	              var file = new File([blob], "crocodile.png", {
+	                type: "image/png"
+	              });
+	              var formData = new FormData();
+	              formData.append('crocodile.png', file);
+	              fetch('/uploadImage', {
+	                method: "POST",
+	                body: formData
+	              }).then(function (response) {
+	                return response.json();
+	              }).then(function (data) {
+	                console.log(data);
+	              });
+	            }, 'image/png');
+	          };
+
+	          this.$refs.chatForm.addEventListener('submit', function (e) {
+	            e.preventDefault();
+	            BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom', {
+	              data: {
+	                roomId: _this.roomId,
+	                userId: _this.userId,
+	                message: _this.message
+	              }
+	            });
+	            _this.message = '';
+	          });
 	        },
 	        methods: {
 	          selectBrush: function selectBrush() {
@@ -101,7 +166,7 @@ this.BX.Hack = this.BX.Hack || {};
 	        },
 	        components: {//Chat
 	        },
-	        template: "\n\t\t\t\t<div class=\"crocodile-container\">\n\t\t\t\t\t<div class=\"artist-panel\" v-if=\"isArtist\">\n\t\t\t\t\t\t<button @click=\"selectBrush\">Brush</button>\n\t\t\t\t\t\t<button @click=\"selectErase\">Erase</button>\n\t\t\t\t\t\t<div class=\"selected-tool\">\n\t\t\t\t\t\t\tTool: {{tool}}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"room-info\">\n\t\t\t\t\t\t<div class=\"room-artist\">{{artistName}}</div>\n\t\t\t\t\t\t<div class=\"room-word\">{{word}}</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"crocodile-game\">\n\t\t\t\t\t\t<canvas ref=\"crocodileCanvas\" width=\"600\" height=\"400\"></canvas>\n\t\t\t\t\t\t<div ref=\"crocodileChat\" class=\"crocodile-chat\">\n\t\t\t\t\t\t\t<div class=\"message\" v-for=\"msg of chat\">\n\t\t\t\t\t\t\t\t<div class=\"message-author\">{{msg.name}}</div>\n\t\t\t\t\t\t\t\t<div class=\"message-text\">{{msg.message}}</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t"
+	        template: "\n\t\t\t\t<div class=\"crocodile-container\">\n\t\t\t\t\t<div class=\"artist-panel\" v-if=\"isArtist\">\n\t\t\t\t\t\t<button @click=\"selectBrush\">Brush</button>\n\t\t\t\t\t\t<button @click=\"selectErase\">Erase</button>\n\t\t\t\t\t\t<div class=\"selected-tool\">\n\t\t\t\t\t\t\tTool: {{tool}}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"room-info\">\n\t\t\t\t\t\t<div class=\"room-artist\">{{artistName}}</div>\n\t\t\t\t\t\t<div class=\"room-word\" v-if=\"isArtist\">{{word}}</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"crocodile-game\">\n\t\t\t\t\t\t<canvas ref=\"crocodileCanvas\" width=\"600\" height=\"400\"></canvas>\n\t\t\t\t\t\t<div class=\"crocodile-chat\">\n\t\t\t\t\t\t\t<div ref=\"crocodileChat\" class=\"crocodile-messages\">\n\t\t\t\t\t\t\t\t<div class=\"message\" v-for=\"msg of chat\">\n\t\t\t\t\t\t\t\t\t<div class=\"message-author\">{{msg.name}}</div>\n\t\t\t\t\t\t\t\t\t<div class=\"message-text\">{{msg.message}}</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<form ref=\"chatForm\" class=\"crocodile-chat-form\" v-if=\"!isArtist\">\n\t\t\t\t\t\t\t\t<input type=\"text\" placeholder=\"\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435\" class=\"crocodile-input\" v-model=\"message\">\n\t\t\t\t\t\t\t\t<input type=\"submit\" value=\"\u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C\">\n\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t"
 	      }).mount(this.rootNode);
 	    }
 	  }]);

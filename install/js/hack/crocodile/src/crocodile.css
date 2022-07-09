@@ -27,8 +27,15 @@ canvas {
 }
 
 .crocodile-chat {
-	border: 1px solid #000;
 	flex: 1;
+}
+
+.crocodile-messages {
+	display: flex;
+	max-height: 400px;
+	flex-direction: column;
+	border: 1px solid #000;
+	overflow-y: auto;
 }
 
 .message {
@@ -39,4 +46,19 @@ canvas {
 
 .message-author {
 	font-weight: bold;
+}
+
+.crocodile-chat-form {
+	display: flex;
+	align-items: center;
+	flex: 1;
+	max-height: 40px;
+	margin-top: 10px;
+}
+
+.crocodile-input {
+	flex: 1;
+	max-height: 40px;
+	line-height: 40px;
+	font-size: 14px;
 }

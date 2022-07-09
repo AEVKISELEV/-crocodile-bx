@@ -36,10 +36,22 @@ canvas {
 }
 
 .crocodile-chat {
-	border: 1px solid #000;
 	-webkit-box-flex: 1;
 	    -ms-flex: 1;
 	        flex: 1;
+}
+
+.crocodile-messages {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	max-height: 400px;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+	border: 1px solid #000;
+	overflow-y: auto;
 }
 
 .message {
@@ -50,4 +62,27 @@ canvas {
 
 .message-author {
 	font-weight: bold;
+}
+
+.crocodile-chat-form {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	-webkit-box-flex: 1;
+	    -ms-flex: 1;
+	        flex: 1;
+	max-height: 40px;
+	margin-top: 10px;
+}
+
+.crocodile-input {
+	-webkit-box-flex: 1;
+	    -ms-flex: 1;
+	        flex: 1;
+	max-height: 40px;
+	line-height: 40px;
+	font-size: 14px;
 }
