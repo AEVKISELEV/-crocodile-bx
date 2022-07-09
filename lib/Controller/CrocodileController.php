@@ -3,6 +3,7 @@
 namespace Hack\Crocodile\Controller;
 
 use Bitrix\Main;
+use CPullWatch;
 use Hack\Crocodile\ORM\MessageTable;
 use Hack\Crocodile\ORM\RoomTable;
 
@@ -20,6 +21,7 @@ class CrocodileController extends Main\Engine\Controller
 		global $USER;
 		$room = $this->getRoom();
 		$userID = $USER->GetID();
+		CPullWatch::Add($userID, 'crocodile', true);
 
 		if((int)$room['ARTIST_ID'] === 0)
 		{
@@ -75,13 +77,15 @@ class CrocodileController extends Main\Engine\Controller
 
 	public function pushImageAction()
 	{
-		\Bitrix\Pull\Event::add(3, [
-			'module_id' => 'hack.crocodile',
-			'command' => 'updateImage',
-			'params' => [
-				'updated' => true
-			],
-		]);
+		CPullWatch::AddToStack(
+			'crocodile', [
+				'module_id' => 'hack.crocodile',
+				'command' => 'updateImage',
+				'params' => [
+					'updated' => true
+				],
+			]
+        );
 	}
 
 	public function uploadMessageAction($roomId, $userId, $message)

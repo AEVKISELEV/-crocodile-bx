@@ -45,11 +45,8 @@ export class CrocodileApplication
 				BX.PULL.subscribe({
 					type: BX.PullClient.SubscriptionType.Server,
 					moduleId: 'hack.crocodile',
-					callback: function (data) {
-						console.log(data)
-					}.bind(this)
+					callback: this.updateImage
 				});
-				// EventEmitter.subscribe('Hack.Crocodile:pictureUpdated', this.updateImage);
 				BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom').then(response => {
 					this.artistName = response.data.artistName;
 					this.roomId = response.data.roomId;
@@ -131,12 +128,9 @@ export class CrocodileApplication
 					this.ctx.strokeStyle = "#ffffff";
 					this.ctx.lineWidth = 16;
 				},
-				updateImage(e) {
-					console.log(e.data)
+				updateImage(data) {
+					console.log(data)
 				}
-			},
-			components: {
-				//Chat
 			},
 			template: `
 				<div class="crocodile-container">
