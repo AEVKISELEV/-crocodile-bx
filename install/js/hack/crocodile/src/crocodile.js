@@ -66,9 +66,20 @@ export class CrocodileApplication
 					});
 
 					this.ctx = this.$refs.crocodileCanvas.getContext("2d");
-					this.ctx.fillStyle = "#ffffff";
-					this.ctx.rect(0, 0, this.$refs.crocodileCanvas.width, this.$refs.crocodileCanvas.height);
-					this.ctx.fill();
+					// this.ctx.fillStyle = "#ffffff";
+					// this.ctx.rect(0, 0, this.$refs.crocodileCanvas.width, this.$refs.crocodileCanvas.height);
+					// this.ctx.fill();
+					fetch('/getCrocodileImage', {method: "GET"})
+						.then((response) => {
+							return response.json();
+						})
+						.then((img) => {
+							const image = new Image();
+							image.onload = () => {
+								this.ctx.drawImage(image, 0, 0);
+							};
+							image.src = img;
+						})
 
 					this.ctx.strokeStyle = "#000000";
 					this.ctx.lineCap = "round";
@@ -93,15 +104,18 @@ export class CrocodileApplication
 					};
 
 					this.$refs.crocodileCanvas.onmouseup = () => {
-						this.$refs.crocodileCanvas.toBlob((blob) => {
-							let file = new File([blob], "crocodile.png", { type: "image/png" });
-							let formData = new FormData();
-							formData.append('crocodile.png', file);
-							fetch('/uploadImage', {method: "POST", body: formData})
-								.then(() => {
-									BX.ajax.runAction('hack:crocodile.CrocodileController.pushImage');
-								})
-						}, 'image/png');
+						if (this.isArtist)
+						{
+							this.$refs.crocodileCanvas.toBlob((blob) => {
+								let file = new File([blob], "crocodile.png", { type: "image/png" });
+								let formData = new FormData();
+								formData.append('crocodile.png', file);
+								fetch('/uploadImage', {method: "POST", body: formData})
+									.then(() => {
+										BX.ajax.runAction('hack:crocodile.CrocodileController.pushImage');
+									})
+							}, 'image/png');
+						}
 					};
 
 					this.$refs.chatForm.addEventListener('submit', (e) => {
@@ -110,8 +124,8 @@ export class CrocodileApplication
 							data: {
 								roomId: this.roomId,
 								userId: this.userId,
-								userName: this.userName,
 								message: this.message,
+								userName: this.userName,
 							}
 						});
 						this.message = '';
@@ -133,11 +147,22 @@ export class CrocodileApplication
 				handlePullEvent(event) {
 					if (event.command === 'updateImage')
 					{
-
+						fetch('/getCrocodileImage', {method: "GET"})
+							.then((response) => {
+								return response.json();
+							})
+							.then((img) => {
+								const image = new Image();
+								image.onload = () => {
+									this.ctx.drawImage(image, 0, 0);
+								};
+								image.src = img;
+							})
 					}
 					if (event.command === 'updateChat')
 					{
-						this.chat.append(event.params);
+						this.chat.push(event.params);
+						this.$refs.crocodileChat.scrollTop = this.$refs.crocodileChat.scrollHeight;
 					}
 				}
 			},

@@ -62,13 +62,23 @@ this.BX.Hack = this.BX.Hack || {};
 	              _this.chat = r.data;
 	              _this.$refs.crocodileChat.scrollTop = _this.$refs.crocodileChat.scrollHeight;
 	            });
-	            _this.ctx = _this.$refs.crocodileCanvas.getContext("2d");
-	            _this.ctx.fillStyle = "#ffffff";
+	            _this.ctx = _this.$refs.crocodileCanvas.getContext("2d"); // this.ctx.fillStyle = "#ffffff";
+	            // this.ctx.rect(0, 0, this.$refs.crocodileCanvas.width, this.$refs.crocodileCanvas.height);
+	            // this.ctx.fill();
 
-	            _this.ctx.rect(0, 0, _this.$refs.crocodileCanvas.width, _this.$refs.crocodileCanvas.height);
+	            fetch('/getCrocodileImage', {
+	              method: "GET"
+	            }).then(function (response) {
+	              return response.json();
+	            }).then(function (img) {
+	              var image = new Image();
 
-	            _this.ctx.fill();
+	              image.onload = function () {
+	                _this.ctx.drawImage(image, 0, 0);
+	              };
 
+	              image.src = img;
+	            });
 	            _this.ctx.strokeStyle = "#000000";
 	            _this.ctx.lineCap = "round";
 	            _this.ctx.lineWidth = 4;
@@ -95,19 +105,21 @@ this.BX.Hack = this.BX.Hack || {};
 	            };
 
 	            _this.$refs.crocodileCanvas.onmouseup = function () {
-	              _this.$refs.crocodileCanvas.toBlob(function (blob) {
-	                var file = new File([blob], "crocodile.png", {
-	                  type: "image/png"
-	                });
-	                var formData = new FormData();
-	                formData.append('crocodile.png', file);
-	                fetch('/uploadImage', {
-	                  method: "POST",
-	                  body: formData
-	                }).then(function () {
-	                  BX.ajax.runAction('hack:crocodile.CrocodileController.pushImage');
-	                });
-	              }, 'image/png');
+	              if (_this.isArtist) {
+	                _this.$refs.crocodileCanvas.toBlob(function (blob) {
+	                  var file = new File([blob], "crocodile.png", {
+	                    type: "image/png"
+	                  });
+	                  var formData = new FormData();
+	                  formData.append('crocodile.png', file);
+	                  fetch('/uploadImage', {
+	                    method: "POST",
+	                    body: formData
+	                  }).then(function () {
+	                    BX.ajax.runAction('hack:crocodile.CrocodileController.pushImage');
+	                  });
+	                }, 'image/png');
+	              }
 	            };
 
 	            _this.$refs.chatForm.addEventListener('submit', function (e) {
@@ -116,8 +128,8 @@ this.BX.Hack = this.BX.Hack || {};
 	                data: {
 	                  roomId: _this.roomId,
 	                  userId: _this.userId,
-	                  userName: _this.userName,
-	                  message: _this.message
+	                  message: _this.message,
+	                  userName: _this.userName
 	                }
 	              });
 	              _this.message = '';
@@ -136,10 +148,27 @@ this.BX.Hack = this.BX.Hack || {};
 	            this.ctx.lineWidth = 16;
 	          },
 	          handlePullEvent: function handlePullEvent(event) {
-	            if (event.command === 'updateImage') ;
+	            var _this2 = this;
+
+	            if (event.command === 'updateImage') {
+	              fetch('/getCrocodileImage', {
+	                method: "GET"
+	              }).then(function (response) {
+	                return response.json();
+	              }).then(function (img) {
+	                var image = new Image();
+
+	                image.onload = function () {
+	                  _this2.ctx.drawImage(image, 0, 0);
+	                };
+
+	                image.src = img;
+	              });
+	            }
 
 	            if (event.command === 'updateChat') {
-	              this.chat.append(event.params);
+	              this.chat.push(event.params);
+	              this.$refs.crocodileChat.scrollTop = this.$refs.crocodileChat.scrollHeight;
 	            }
 	          }
 	        },

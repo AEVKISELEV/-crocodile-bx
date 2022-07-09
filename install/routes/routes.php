@@ -13,4 +13,8 @@ return function (RoutingConfigurator $routes) {
 		echo 123;
 	});
 
+	$routes->get('/getCrocodileImage', function () {
+		echo json_encode('data:image/jpeg;base64,'.base64_encode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/assets/crocodile.png")));
+	});
+
 };
