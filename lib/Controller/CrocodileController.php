@@ -20,36 +20,43 @@ class CrocodileController extends Main\Engine\Controller
 		$room = $this->getRoom();
 		$userID = $USER->GetID();
 
-		if ($room['ARTIST_ID'] !== 0)
-		{
-			$artist = $USER::GetByID($room['ID']);
-			return [
-				'idRoom' => $room['ID'],
-				'artistName' => $artist->GetFirstName(),
-				'isArtist' => false,
-				'userID' => $userID,
-			];
-		}
-
-		if($room['ARTIST_ID'] === 0)
+		if((int)$room['ARTIST_ID'] === 0)
 		{
 			$this->updateRoom($room['ID'], $userID);
 			return [
 				'idRoom' => $room['ID'],
 				'artistName' => $USER->GetFirstName(),
 				'isArtist' => true,
-				'word' => $room['word'],
+				'word' => $room['WORD'],
 				'userID' => $userID,
 			];
 		}
-		return [];
+
+		$artist = $USER::GetByID((int)$room['ARTIST_ID'])->fetch();
+		if ($artist['ID'] !== $userID)
+		{
+			return [
+				'idRoom' => $room['ID'],
+				'artistName' => "{$artist['NAME']} {$artist['LAST_NAME']}",
+				'isArtist' => false,
+				'userID' => $userID,
+			];
+		}
+
+		return [
+			'idRoom' => $room['ID'],
+			'artistName' => $USER->GetFirstName(),
+			'isArtist' => true,
+			'word' => $room['WORD'],
+			'userID' => $userID,
+		];
 	}
 
 	private function getRoom()
 	{
 		$parameters = [
 			'select' => ['*'],
-			'LIMIT' => 1
+			'limit' => 1
 		];
 
 		return RoomTable::getList($parameters)->fetch();

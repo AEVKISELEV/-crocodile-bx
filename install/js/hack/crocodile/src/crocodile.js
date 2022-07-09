@@ -56,8 +56,7 @@ export class CrocodileApplication
 			mounted()
 			{
 				BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom').then(response => {
-					console.log(response.data);
-					return;
+					console.log(response.data)
 					this.artistName = response.data.artistName;
 					this.roomId = response.data.roomId;
 					this.userId = response.data.userId;
