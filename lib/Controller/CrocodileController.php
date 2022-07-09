@@ -52,9 +52,24 @@ class CrocodileController extends Main\Engine\Controller
 		];
 	}
 
-	public function getChatFunction($roomId)
+	public function getChatAction($roomId): array
 	{
-
+		global $USER;
+		$parameters = [
+			'select' => ['*'],
+			'filter' => ['ROOM_ID' => $roomId]
+		];
+		$messages = RoomTable::getList($parameters)->fetchAll();
+		$arrayMessages = [];
+		foreach ($messages as $message)
+		{
+			$user = $USER::GetByID($message['USER_ID'])->fetch();
+			$arrayMessages[] = [
+				'name' => "{$user['NAME']} {$user['LAST_NAME']}",
+				'message' => $message['MESSAGE'],
+			];
+		}
+		return $arrayMessages;
 	}
 
 	private function getRoom()
