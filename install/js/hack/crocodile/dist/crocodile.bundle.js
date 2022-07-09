@@ -40,6 +40,13 @@ this.BX.Hack = this.BX.Hack || {};
 	        mounted: function mounted() {
 	          var _this = this;
 
+	          BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom').then(function (response) {
+	            _this.artistName = response.data.artistName;
+	            _this.roomId = response.data.roomId;
+	            _this.isArtist = response.data.isArtist;
+	            _this.word = response.data.word;
+	            _this.imagePath = response.data.imagePath;
+	          });
 	          var canvas = this.$refs.crocodileCanvas;
 	          this.ctx = canvas.getContext("2d");
 	          this.ctx.fillStyle = "#ffffff";

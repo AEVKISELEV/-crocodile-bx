@@ -37,6 +37,14 @@ export class CrocodileApplication
 			},
 			mounted()
 			{
+				BX.ajax.runAction('hack:crocodile.CrocodileController.getRoom').then(response => {
+					this.artistName = response.data.artistName;
+					this.roomId = response.data.roomId;
+					this.isArtist = response.data.isArtist;
+					this.word = response.data.word;
+					this.imagePath = response.data.imagePath;
+				});
+
 				const canvas = this.$refs.crocodileCanvas;
 				this.ctx = canvas.getContext("2d");
 
