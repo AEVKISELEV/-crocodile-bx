@@ -67,9 +67,6 @@ export class CrocodileApplication
 					});
 
 					this.ctx = this.$refs.crocodileCanvas.getContext("2d");
-					// this.ctx.fillStyle = "#ffffff";
-					// this.ctx.rect(0, 0, this.$refs.crocodileCanvas.width, this.$refs.crocodileCanvas.height);
-					// this.ctx.fill();
 					fetch('/getCrocodileImage', {method: "GET"})
 						.then((response) => {
 							return response.json();
@@ -104,20 +101,8 @@ export class CrocodileApplication
 						}
 					};
 
-					this.$refs.crocodileCanvas.onmouseup = () => {
-						if (this.isArtist)
-						{
-							this.$refs.crocodileCanvas.toBlob((blob) => {
-								let file = new File([blob], "crocodile.png", { type: "image/png" });
-								let formData = new FormData();
-								formData.append('crocodile.png', file);
-								fetch('/uploadImage', {method: "POST", body: formData})
-									.then(() => {
-										BX.ajax.runAction('hack:crocodile.CrocodileController.pushImage');
-									})
-							}, 'image/png');
-						}
-					};
+					this.$refs.crocodileCanvas.onmouseup = this.pictureUpdated;
+					this.$refs.crocodileCanvas.onmouseleave = this.pictureUpdated;
 
 					this.$refs.chatForm.addEventListener('submit', (e) => {
 						e.preventDefault();
@@ -145,6 +130,20 @@ export class CrocodileApplication
 					this.ctx.strokeStyle = "#ffffff";
 					this.ctx.lineWidth = 16;
 				},
+				pictureUpdated() {
+					if (this.isArtist)
+					{
+						this.$refs.crocodileCanvas.toBlob((blob) => {
+							let file = new File([blob], "crocodile.png", { type: "image/png" });
+							let formData = new FormData();
+							formData.append('crocodile.png', file);
+							fetch('/uploadImage', {method: "POST", body: formData})
+								.then(() => {
+									BX.ajax.runAction('hack:crocodile.CrocodileController.pushImage');
+								})
+						}, 'image/png');
+					}
+				},
 				handlePullEvent(event) {
 					if (event.command === 'updateImage' && !this.isArtist)
 					{
@@ -171,7 +170,7 @@ export class CrocodileApplication
 							{
 								width: 300,
 								height: 200,
-								content: Tag.render`<div>${event.params.winnerName}</div>`,
+								content: Tag.render`<div>${event.params.winnerName} победил!</div>`,
 								closeIcon: true,
 								events: {
 									onClose()
@@ -181,6 +180,20 @@ export class CrocodileApplication
 								}
 							}
 						);
+						if (this.isArtist)
+						{
+							const canvas = document.createElement('canvas');
+							const ctx = canvas.getContext("2d");
+							ctx.fillStyle = "#ffffff";
+							ctx.rect(0, 0, 800, 600);
+							ctx.fill();
+							canvas.toBlob((blob) => {
+								let file = new File([blob], "crocodile.png", { type: "image/png" });
+								let formData = new FormData();
+								formData.append('crocodile.png', file);
+								fetch('/uploadImage', { method: "POST", body: formData });
+							});
+						}
 						popup.show();
 					}
 				}
@@ -195,7 +208,7 @@ export class CrocodileApplication
 						</div>
 					</div>
 					<div class="room-info">
-						<div class="room-artist">{{artistName}}</div>
+						<div class="room-artist">Художник: {{artistName}}</div>
 						<div class="room-word" v-if="isArtist">{{word}}</div>
 					</div>
 					<div class="crocodile-game">
