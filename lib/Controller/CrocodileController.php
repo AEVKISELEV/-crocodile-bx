@@ -25,7 +25,7 @@ class CrocodileController extends Main\Engine\Controller
 			$this->updateRoom($room['ID'], $userID);
 			return [
 				'idRoom' => $room['ID'],
-				'artistName' => $USER->GetFirstName(),
+				'artistName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
 				'isArtist' => true,
 				'word' => $room['WORD'],
 				'userID' => $userID,
@@ -45,11 +45,16 @@ class CrocodileController extends Main\Engine\Controller
 
 		return [
 			'idRoom' => $room['ID'],
-			'artistName' => $USER->GetFirstName(),
+			'artistName' => "{$USER->GetFirstName()} {$USER->GetLastName()}",
 			'isArtist' => true,
 			'word' => $room['WORD'],
 			'userID' => $userID,
 		];
+	}
+
+	public function getChatFunction($roomId)
+	{
+
 	}
 
 	private function getRoom()
